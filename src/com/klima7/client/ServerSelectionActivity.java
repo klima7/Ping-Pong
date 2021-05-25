@@ -9,9 +9,8 @@ import java.awt.*;
 
 public class ServerSelectionActivity extends Activity {
 
-	private JTextField nickField;
-
-	public ServerSelectionActivity() {
+	@Override
+	public void initUI() {
 		setLayout(null);
 
 		JLabel text = new JLabel("Select server");

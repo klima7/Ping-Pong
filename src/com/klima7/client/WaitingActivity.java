@@ -1,16 +1,15 @@
 package com.klima7.client;
 
 import com.klima7.app.Activity;
-import com.klima7.app.App;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class WaitingActivity extends Activity {
 
 	private JLabel text;
 
-	public WaitingActivity() {
+	@Override
+	public void initUI() {
 		setLayout(null);
 
 		text = new JLabel();

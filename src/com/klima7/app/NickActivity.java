@@ -5,9 +5,12 @@ import java.awt.*;
 
 public class NickActivity extends Activity {
 
+	public static final int MIN_NICK_LENGTH = 5;
+
 	private JTextField nickField;
 
-	public NickActivity() {
+	@Override
+	public void initUI() {
 		setLayout(null);
 
 		JLabel text = new JLabel("Enter you nick");
@@ -28,6 +31,11 @@ public class NickActivity extends Activity {
 	}
 
 	private void okClicked() {
-		startActivity(new ModuleActivity());
+		String nick = nickField.getText();
+		if(nick.length() < MIN_NICK_LENGTH) {
+			showInfoMessage("Nick too short", "You nick must have at least " + MIN_NICK_LENGTH + " characters");
+			return;
+		}
+		startActivity(new ModuleActivity(nick));
 	}
 }

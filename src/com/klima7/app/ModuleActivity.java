@@ -7,7 +7,14 @@ import java.awt.*;
 
 public class ModuleActivity extends Activity {
 
-	public ModuleActivity() {
+	private String nick;
+
+	public ModuleActivity(String nick) {
+		this.nick = nick;
+	}
+
+	@Override
+	public void initUI() {
 		setLayout(null);
 
 		JLabel text = new JLabel("Select mode");

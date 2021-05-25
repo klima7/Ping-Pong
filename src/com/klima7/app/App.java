@@ -28,9 +28,21 @@ public class App extends JFrame {
 
 	public void setActivity(Activity activity) {
 		activity.setContext(this);
+		Activity oldActivity = getActivity();
+		if(oldActivity != null)
+			oldActivity.onStop();
 		basePanel.removeAll();
+		activity.onStart();
 		basePanel.add(activity, BorderLayout.CENTER);
 		revalidate();
+	}
+
+	public Activity getActivity() {
+		Component[] components = basePanel.getComponents();
+		if(components.length == 0)
+			return null;
+		Activity activity = (Activity)basePanel.getComponent(0);
+		return activity;
 	}
 
 	public static void main(String[] args) {
