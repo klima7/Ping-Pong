@@ -11,7 +11,8 @@ public class Server {
 
 	private static Server instance;
 
-	private ServerSocket serverSocket;
+	private String nick;
+	private final ServerSocket serverSocket;
 	private DiscoveryListener listener;
 
 	public static Server getInstance() {
@@ -24,10 +25,18 @@ public class Server {
 		this.serverSocket = randomSocket();
 	}
 
+	public String getNick() {
+		return nick;
+	}
+
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+
 	public void startDiscoveryListen() throws IOException {
 		if(listener != null)
 			throw new IOException("Already listening");
-		listener = new DiscoveryListener(serverSocket.getLocalPort());
+		listener = new DiscoveryListener(serverSocket.getLocalPort(), nick);
 		listener.start();
 	}
 

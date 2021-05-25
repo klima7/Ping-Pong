@@ -10,25 +10,25 @@ import java.util.concurrent.CompletableFuture;
 
 public class DiscoverySender {
 
-	public static final int DISCOVERY_TIME = 1000;
+	public static final int DISCOVERY_TIME = 500;
 
-	public static List<InetSocketAddress> discover() throws IOException {
-		List<InetSocketAddress> addresses = new ArrayList<>();
+	public static List<Offer> discover() throws IOException {
+		List<Offer> offers = new ArrayList<>();
 		MulticastSocket socket = createSocket();
 		sendDiscover();
 
 		long startTime = System.currentTimeMillis();
 		do {
-			InetSocketAddress address = receiveMessage(socket);
-			if(address != null)
-				addresses.add(address);
+			Offer offer = receiveMessage(socket);
+			if(offer != null)
+				offers.add(offer);
 		} while(System.currentTimeMillis() - startTime < DISCOVERY_TIME);
 
 		closeSocketAndLeaveGroup(socket);
-		return addresses;
+		return offers;
 	}
 
-	public static CompletableFuture<List<InetSocketAddress>> discoverAsync() {
+	public static CompletableFuture<List<Offer>> discoverAsync() {
 		return CompletableFuture.supplyAsync(() -> {
 			try {
 				return discover();
@@ -50,7 +50,7 @@ public class DiscoverySender {
 		return socket;
 	}
 
-	private static InetSocketAddress receiveMessage(MulticastSocket socket) throws IOException {
+	private static Offer receiveMessage(MulticastSocket socket) throws IOException {
 		byte[] receiveData = new byte[100];
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
 		try {
@@ -60,13 +60,13 @@ public class DiscoverySender {
 		}
 		String message = new String(packet.getData(), packet.getOffset(), packet.getLength());
 
-		if(!message.startsWith("OFFER "))
+		String[] parts = message.split("\\s");
+		if(parts.length != 3 || !parts[0].equals("OFFER"))
 			return null;
 
-		String portPart = message.substring(6);
 		try {
-			int port =  Integer.parseInt(portPart);
-			return new InetSocketAddress(packet.getAddress(), port);
+			int port =  Integer.parseInt(parts[1]);
+			return new Offer(packet.getAddress(), port, parts[2]);
 		} catch(NumberFormatException e) {
 			return null;
 		}

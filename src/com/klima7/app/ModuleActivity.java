@@ -1,6 +1,7 @@
 package com.klima7.app;
 
 import com.klima7.client.ServerSelectionActivity;
+import com.klima7.server.Server;
 import com.klima7.server.ServerIdleActivity;
 
 import javax.swing.*;
@@ -41,6 +42,8 @@ public class ModuleActivity extends Activity {
 	}
 
 	private void serverSelected() {
+		Server server = Server.getInstance();
+		server.setNick(nick);
 		startActivity(new ServerIdleActivity());
 	}
 }

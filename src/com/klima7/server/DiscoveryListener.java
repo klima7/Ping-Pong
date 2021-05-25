@@ -9,11 +9,14 @@ import java.net.*;
 public class DiscoveryListener extends Thread {
 
 	private int offeringPort;
+	private String nick;
+
 	private boolean running;
 	private MulticastSocket socket;
 
-	public DiscoveryListener(int offeringPort) throws IOException {
+	public DiscoveryListener(int offeringPort, String nick) throws IOException {
 		this.offeringPort = offeringPort;
+		this.nick = nick;
 		this.running = true;
 
 		socket = new MulticastSocket(Constants.DISCOVERY_PORT);
@@ -62,7 +65,7 @@ public class DiscoveryListener extends Thread {
 		DatagramSocket socket = new DatagramSocket();
 		socket.setBroadcast(true);
 
-		String message = "OFFER " + offeringPort;
+		String message = "OFFER " + offeringPort + " " + nick;
 		byte[] buffer = message.getBytes();
 
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, inetAddress, Constants.DISCOVERY_PORT);

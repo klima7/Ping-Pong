@@ -43,12 +43,9 @@ public class ServerSelectionActivity extends Activity {
 		DiscoverySender.discoverAsync().thenAccept(list -> updateList(list));
 	}
 
-	private void updateList(List<InetSocketAddress> discovered) {
-		System.out.println("Discovered");
-		System.out.println(discovered);
-
-		for(InetSocketAddress address : discovered) {
-			addEntry(address.getHostString() + ":" + address.getPort());
+	private void updateList(List<Offer> offers) {
+		for(Offer offer : offers) {
+			addEntry(offer.toString());
 		}
 	}
 
