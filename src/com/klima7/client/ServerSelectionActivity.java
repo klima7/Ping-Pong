@@ -1,19 +1,17 @@
 package com.klima7.client;
 
+import com.klima7.app.Activity;
 import com.klima7.app.App;
 import com.klima7.app.ModuleActivity;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ServerSelectionActivity extends JPanel {
+public class ServerSelectionActivity extends Activity {
 
-	private App app;
 	private JTextField nickField;
 
-	public ServerSelectionActivity(App app) {
-		this.app = app;
-
+	public ServerSelectionActivity() {
 		setLayout(null);
 
 		JLabel text = new JLabel("Select server");
@@ -37,6 +35,6 @@ public class ServerSelectionActivity extends JPanel {
 	}
 
 	private void okClicked() {
-
+		startActivity(new WaitingActivity());
 	}
 }

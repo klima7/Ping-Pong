@@ -1,7 +1,5 @@
 package com.klima7.app;
 
-import com.klima7.client.ServerSelectionActivity;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,7 +11,7 @@ public class App extends JFrame {
 
 	private final JPanel basePanel;
 
-	public App() {
+	public App(Activity startActivity) {
 		setTitle(TITLE);
 		setSize(WIDTH, HEIGHT);
 		setResizable(false);
@@ -23,18 +21,19 @@ public class App extends JFrame {
 		basePanel = new JPanel();
 		basePanel.setLayout(new BorderLayout());
 		add(basePanel);
+
+		setActivity(startActivity);
+		setVisible(true);
 	}
 
-	public void setActivity(JPanel activity) {
+	public void setActivity(Activity activity) {
+		activity.setContext(this);
 		basePanel.removeAll();
 		basePanel.add(activity, BorderLayout.CENTER);
 		revalidate();
 	}
 
 	public static void main(String[] args) {
-		App app = new App();
-//		app.setActivity(new ServerSelectionActivity(app));
-		app.setActivity(new NickActivity(app));
-		app.setVisible(true);
+		new App(new NickActivity());
 	}
 }

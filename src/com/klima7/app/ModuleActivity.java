@@ -5,13 +5,9 @@ import com.klima7.client.ServerSelectionActivity;
 import javax.swing.*;
 import java.awt.*;
 
-public class ModuleActivity extends JPanel {
+public class ModuleActivity extends Activity {
 
-	private final App app;
-
-	public ModuleActivity(App app) {
-		this.app = app;
-
+	public ModuleActivity() {
 		setLayout(null);
 
 		JLabel text = new JLabel("Select mode");
@@ -37,6 +33,6 @@ public class ModuleActivity extends JPanel {
 	}
 
 	private void serverSelected() {
-		app.setActivity(new ServerSelectionActivity(app));
+		startActivity(new ServerSelectionActivity());
 	}
 }

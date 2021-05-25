@@ -3,14 +3,11 @@ package com.klima7.app;
 import javax.swing.*;
 import java.awt.*;
 
-public class NickActivity extends JPanel {
+public class NickActivity extends Activity {
 
-	private App app;
 	private JTextField nickField;
 
-	public NickActivity(App app) {
-		this.app = app;
-
+	public NickActivity() {
 		setLayout(null);
 
 		JLabel text = new JLabel("Enter you nick");
@@ -31,6 +28,6 @@ public class NickActivity extends JPanel {
 	}
 
 	private void okClicked() {
-		app.setActivity(new ModuleActivity(app));
+		startActivity(new ModuleActivity());
 	}
 }
