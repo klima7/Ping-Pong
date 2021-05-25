@@ -1,6 +1,7 @@
 package com.klima7.server;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.Random;
 
 public class Server {
@@ -10,7 +11,7 @@ public class Server {
 
 	private static Server instance;
 
-	private final int randomPort;
+	private ServerSocket serverSocket;
 	private DiscoveryListener listener;
 
 	public static Server getInstance() {
@@ -20,13 +21,13 @@ public class Server {
 	}
 
 	private Server() {
-		this.randomPort = randomizePort();
+		this.serverSocket = randomSocket();
 	}
 
 	public void startDiscoveryListen() throws IOException {
 		if(listener != null)
 			throw new IOException("Already listening");
-		listener = new DiscoveryListener(randomPort);
+		listener = new DiscoveryListener(serverSocket.getLocalPort());
 		listener.start();
 	}
 
@@ -35,9 +36,14 @@ public class Server {
 		listener = null;
 	}
 
-	private int randomizePort() {
-		Random random = new Random();
-		int port = random.nextInt(MAX_PORT_NUMBER-MIN_PORT_NUMBER) + MIN_PORT_NUMBER;
-		return port;
+	private ServerSocket randomSocket() {
+		while(true) {
+			Random random = new Random();
+			int port = random.nextInt(MAX_PORT_NUMBER - MIN_PORT_NUMBER) + MIN_PORT_NUMBER;
+
+			try {
+				return new ServerSocket(port);
+			} catch (IOException ignored) { }
+		}
 	}
 }

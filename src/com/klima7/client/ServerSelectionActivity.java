@@ -1,13 +1,17 @@
 package com.klima7.client;
 
 import com.klima7.app.Activity;
-import com.klima7.app.App;
-import com.klima7.app.ModuleActivity;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerSelectionActivity extends Activity {
+
+	private JList<String> list;
+	private final List<String> entries = new ArrayList();
 
 	@Override
 	public void initUI() {
@@ -18,7 +22,7 @@ public class ServerSelectionActivity extends Activity {
 		text.setBounds(210, 10, 700, 50);
 		add(text);
 
-		JList list = new JList(new String[] {"Hello", "There"});
+		list = new JList<>();
 		list.setFont(list.getFont().deriveFont(30f));
 		list.setBounds(100, 70, 500, 300);
 		list.setBorder(BorderFactory.createCompoundBorder(
@@ -33,7 +37,29 @@ public class ServerSelectionActivity extends Activity {
 		add(okButton);
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		DiscoverySender.discoverAsync().thenAccept(list -> updateList(list));
+	}
+
+	private void updateList(List<InetSocketAddress> discovered) {
+		System.out.println("Discovered");
+		System.out.println(discovered);
+
+		for(InetSocketAddress address : discovered) {
+			addEntry(address.getHostString() + ":" + address.getPort());
+		}
+	}
+
 	private void okClicked() {
 		startActivity(new WaitingActivity());
+	}
+
+	private void addEntry(String entry) {
+		entries.add(entry);
+		String[] array = new String[entries.size()];
+		entries.toArray(array);
+		list.setListData(array);
 	}
 }
