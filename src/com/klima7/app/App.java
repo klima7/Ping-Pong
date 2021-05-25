@@ -1,13 +1,15 @@
 package com.klima7.app;
 
+import com.klima7.client.ServerSelectionActivity;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class App extends JFrame {
 
 	public static final String TITLE = "Ping-Pong";
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
+	public static final int WIDTH = 700;
+	public static final int HEIGHT = 500;
 
 	private final JPanel basePanel;
 
@@ -31,7 +33,8 @@ public class App extends JFrame {
 
 	public static void main(String[] args) {
 		App app = new App();
-		app.setActivity(new GameActivity(app));
+//		app.setActivity(new ServerSelectionActivity(app));
+		app.setActivity(new NickActivity(app));
 		app.setVisible(true);
 	}
 }
