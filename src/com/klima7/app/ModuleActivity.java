@@ -1,6 +1,7 @@
 package com.klima7.app;
 
 import com.klima7.client.ServerSelectionActivity;
+import com.klima7.server.ServerIdleActivity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,10 +37,10 @@ public class ModuleActivity extends Activity {
 	}
 
 	private void clientSelected() {
-
+		startActivity(new ServerSelectionActivity());
 	}
 
 	private void serverSelected() {
-		startActivity(new ServerSelectionActivity());
+		startActivity(new ServerIdleActivity());
 	}
 }

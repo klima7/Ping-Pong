@@ -46,6 +46,6 @@ public class App extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new App(new NickActivity());
+		new App(new ModuleActivity("klima7"));
 	}
 }
