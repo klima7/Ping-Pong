@@ -1,12 +1,21 @@
 package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
+import com.klima7.client.back.Offer;
+import com.klima7.client.back.PositionNotifier;
 
 import javax.swing.*;
 
-public class WaitingActivity extends Activity {
+public class WaitingActivity extends Activity implements PositionNotifier.PositionNotifierListener {
+
+	private Offer offer;
+	private PositionNotifier notifier;
 
 	private JLabel text;
+
+	public WaitingActivity(Offer offer) {
+		this.offer = offer;
+	}
 
 	@Override
 	public void initUI() {
@@ -26,8 +35,36 @@ public class WaitingActivity extends Activity {
 		setPosition(0);
 	}
 
+	@Override
+	public void onStart() {
+		System.out.println("OnStart");
+		notifier = new PositionNotifier(offer.getSocket(), "Nick", this);
+		notifier.start();
+	}
+
 	private void okClicked() {
 		startActivity(new ServerSelectionActivity());
+	}
+
+	@Override
+	public void onPositionChanged(int position) {
+		System.out.println("onPositionchanged " + position);
+		setPosition(position);
+	}
+
+	@Override
+	public void onInvalidNick() {
+		System.out.println("onInvalidNick");
+	}
+
+	@Override
+	public void onValidNick() {
+		System.out.println("onValidNick");
+	}
+
+	@Override
+	public void onError() {
+		showErrorMessage("Connection error", "Connection with this server has been broken");
 	}
 
 	private void setPosition(int position) {

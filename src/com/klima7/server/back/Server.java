@@ -49,6 +49,7 @@ public class Server implements TcpManager.ConnectionListener {
 
 	@Override
 	public void onConnection(Socket socket) {
+		System.out.println("onConnection");
 		queueManager.add(socket);
 	}
 

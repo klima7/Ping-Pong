@@ -1,18 +1,19 @@
 package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
-import com.klima7.client.back.DiscoverySender;
+import com.klima7.client.back.UdpDiscovery;
 import com.klima7.client.back.Offer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSelectionActivity extends Activity {
 
-	private JList<String> list;
-	private final List<String> entries = new ArrayList();
+	private JList<Offer> list;
+	private final List<Offer> entries = new ArrayList<>();
 
 	@Override
 	public void initUI() {
@@ -41,23 +42,36 @@ public class ServerSelectionActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		DiscoverySender.discoverAsync().thenAccept(list -> updateList(list));
+		UdpDiscovery.discoverAsync().thenAccept(this::updateList);
 	}
 
 	private void updateList(List<Offer> offers) {
 		for(Offer offer : offers) {
-			addEntry(offer.toString());
+			addOffer(offer);
 		}
 	}
 
-	private void okClicked() {
-		startActivity(new WaitingActivity());
-	}
-
-	private void addEntry(String entry) {
-		entries.add(entry);
-		String[] array = new String[entries.size()];
+	private void addOffer(Offer offer) {
+		entries.add(offer);
+		Offer[] array = new Offer[entries.size()];
 		entries.toArray(array);
 		list.setListData(array);
+	}
+
+	private void okClicked() {
+		Offer offer = list.getSelectedValue();
+		if(offer == null) {
+			showErrorMessage("No server selected", "You have to select server to start game");
+			return;
+		}
+
+		try {
+			offer.connect();
+		} catch (IOException e) {
+			showErrorMessage("Connection error", "Unable to connect to server");
+			return;
+		}
+
+		startActivity(new WaitingActivity(offer));
 	}
 }

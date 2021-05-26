@@ -35,6 +35,7 @@ public class QueueManager {
 			String message = "POSITION " + position;
 			output.write(message);
 			output.flush();
+			System.out.println("sendPosition");
 		} catch (IOException e) {
 			// Można potem usunąć
 			e.printStackTrace();
