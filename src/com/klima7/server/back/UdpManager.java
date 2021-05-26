@@ -8,11 +8,11 @@ import java.net.*;
 
 public class UdpManager extends Thread {
 
-	private int offeringPort;
-	private String nick;
+	private final int offeringPort;
+	private final String nick;
 
 	private boolean running;
-	private MulticastSocket socket;
+	private final MulticastSocket socket;
 
 	public UdpManager(int offeringPort, String nick) throws IOException {
 		this.offeringPort = offeringPort;
