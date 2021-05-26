@@ -1,5 +1,7 @@
 package com.klima7.server.back;
 
+import com.klima7.app.back.Constants;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
@@ -36,7 +38,7 @@ public class QueueManager {
 	private void sendPosition(Socket socket, int position) {
 		try {
 			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
-			String message = "POSITION " + position;
+			String message = "POSITION " + position + Constants.COMMAND_END;
 			output.write(message);
 			output.flush();
 			System.out.println("sendPosition");

@@ -1,18 +1,17 @@
 package com.klima7.app.gui;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameActivity extends JPanel {
+public class GameActivity extends Activity {
 
 	private int x;
 	private Timer timer;
 
-	public GameActivity(App app) {
+	public GameActivity() {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -30,8 +29,6 @@ public class GameActivity extends JPanel {
 	}
 
 	private void drawDonut(Graphics g) {
-
-		System.out.println("Drawing");
 
 		Graphics2D g2d = (Graphics2D) g;
 

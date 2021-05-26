@@ -1,5 +1,7 @@
 package com.klima7.client.back;
 
+import com.klima7.app.back.Constants;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,7 +11,6 @@ import java.net.Socket;
 public class PositionNotifier extends Thread {
 
 	private boolean running;
-	private boolean invited;
 
 	private final Socket socket;
 	private final String nick;
@@ -26,10 +27,8 @@ public class PositionNotifier extends Thread {
 		running = true;
 		try {
 			while(running) {
-				InputStream input = socket.getInputStream();
-				byte[] bytes = new byte[1024];
-				int bytesRead = input.read(bytes);
-				String message = new String(bytes, 0, bytesRead);
+				String message = receiveMessage();
+				System.out.println("Received: " + message);
 				interpretMessage(message);
 			}
 		} catch (IOException e) {
@@ -38,10 +37,23 @@ public class PositionNotifier extends Thread {
 		}
 	}
 
+	private String receiveMessage() throws IOException {
+		String message = "";
+		InputStream input = socket.getInputStream();
+
+		char c;
+		do {
+			c = (char)input.read();
+			message += c;
+		} while(c != Constants.COMMAND_END);
+
+		return message.substring(0, message.length()-1);
+	}
+
 	private void interpretMessage(String message) {
 		if(message.equals("NICK INVALID"))
 			listener.onInvalidNick();
-		else if(message.equals("VALID NICK"))
+		else if(message.equals("NICK VALID"))
 			listener.onValidNick();
 		else if(message.equals("INVITE")) {
 			try {

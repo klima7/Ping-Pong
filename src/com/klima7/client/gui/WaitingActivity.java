@@ -1,6 +1,8 @@
 package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
+import com.klima7.app.gui.GameActivity;
+import com.klima7.app.gui.NickActivity;
 import com.klima7.client.back.Offer;
 import com.klima7.client.back.PositionNotifier;
 
@@ -29,7 +31,7 @@ public class WaitingActivity extends Activity implements PositionNotifier.Positi
 		JButton okButton = new JButton("Cancel");
 		okButton.setFont(okButton.getFont().deriveFont(40f));
 		okButton.setBounds(200, 250, 300, 50);
-		okButton.addActionListener(e -> okClicked());
+		okButton.addActionListener(e -> cancelClicked());
 		add(okButton);
 
 		setPosition(0);
@@ -38,11 +40,11 @@ public class WaitingActivity extends Activity implements PositionNotifier.Positi
 	@Override
 	public void onStart() {
 		System.out.println("OnStart");
-		notifier = new PositionNotifier(offer.getSocket(), "Nick", this);
+		notifier = new PositionNotifier(offer.getSocket(), "klima7", this);
 		notifier.start();
 	}
 
-	private void okClicked() {
+	private void cancelClicked() {
 		startActivity(new ServerSelectionActivity());
 	}
 
@@ -55,11 +57,14 @@ public class WaitingActivity extends Activity implements PositionNotifier.Positi
 	@Override
 	public void onInvalidNick() {
 		System.out.println("onInvalidNick");
+		showErrorMessage("Nick conflict", "You opponent have the same nick. Change your nick and try again");
+		startActivity(new NickActivity());
 	}
 
 	@Override
 	public void onValidNick() {
 		System.out.println("onValidNick");
+		startActivity(new GameActivity());
 	}
 
 	@Override
