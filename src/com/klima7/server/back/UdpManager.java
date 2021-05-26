@@ -1,12 +1,16 @@
 package com.klima7.server.back;
 
 import com.klima7.app.back.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
 
 
 public class UdpManager extends Thread {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UdpManager.class);
 
 	private final int offeringPort;
 	private final String nick;
@@ -32,19 +36,22 @@ public class UdpManager extends Thread {
 
 	@Override
 	public void run() {
+		LOGGER.info("Running");
 		while(running)
 			receiveAndProcessDatagram();
 		closeSocketAndLeaveGroup();
+		LOGGER.info("Quiting thread");
 	}
 
 	private void receiveAndProcessDatagram() {
 		try {
 			String message = receiveMessage();
+			LOGGER.debug("Datagram received: " + message);
 			if(isDiscoveryMessage(message)) {
 				sendOffer();
 			}
 		} catch(IOException e) {
-			e.printStackTrace();
+			LOGGER.warn("Exception during receiving occurred", e);
 		}
 	}
 
@@ -66,6 +73,7 @@ public class UdpManager extends Thread {
 		socket.setBroadcast(true);
 
 		String message = "OFFER " + offeringPort + " " + nick;
+		LOGGER.debug("Sending offer: " + message);
 		byte[] buffer = message.getBytes();
 
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, inetAddress, Constants.DISCOVERY_PORT);
@@ -74,11 +82,12 @@ public class UdpManager extends Thread {
 	}
 
 	private void closeSocketAndLeaveGroup() {
+		LOGGER.info("Closing socket and leaving multicast group");
 		try {
 			InetSocketAddress groupAddress = new InetSocketAddress(InetAddress.getByName(Constants.DISCOVERY_GROUP), 0);
 			socket.leaveGroup(groupAddress, NetworkInterface.getByName("wlan0"));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn("Exception during leaving udp group occurred", e);
 		}
 		socket.close();
 	}

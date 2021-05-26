@@ -1,6 +1,8 @@
 package com.klima7.server.back;
 
 import com.klima7.app.back.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,8 @@ import java.net.Socket;
 import java.util.concurrent.CompletableFuture;
 
 public class InviteManager {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InviteManager.class);
 
 	private final InviteManagerListener listener;
 	private final String serverNick;
@@ -23,20 +27,24 @@ public class InviteManager {
 	}
 
 	private void inviteBlocking(Socket socket) {
+		LOGGER.info("Inviting process started");
+
 		try {
 			sendInviteMessage(socket);
 			String nick = receiveNick(socket);
 
 			if(nick.equals(serverNick)) {
+				LOGGER.info("Nick " + nick + " is invalid");
 				sendNickInvalidMessage(socket);
 				listener.onNickInvalid(socket);
 			}
 			else {
+				LOGGER.info("Nick " + nick + " is valid");
 				sendNickValidMessage(socket);
 				listener.onNickValid(new Client(nick, socket));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn("Exception during invite process occurred", e);
 			listener.onInviteError(socket);
 		}
 	}
@@ -46,7 +54,6 @@ public class InviteManager {
 	}
 
 	private void sendNickValidMessage(Socket socket) {
-		System.out.println("InviteManager.sendNickValidMessage");
 		sendMessage(socket, "NICK VALID");
 	}
 
@@ -55,23 +62,25 @@ public class InviteManager {
 	}
 
 	private void sendMessage(Socket socket, String text) {
+		LOGGER.debug("Sending message " + text);
 		try {
 			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
 			String message = text + Constants.COMMAND_END;
-			System.out.println("Sending " + message);
 			output.write(message);
 			output.flush();
 		} catch (IOException e) {
-			// Można potem usunąć
-			e.printStackTrace();
+			LOGGER.warn("Exception occurred during sending this message: " + text, e);
 		}
 	}
 
 	private String receiveNick(Socket socket) throws IOException {
+		LOGGER.debug("Waiting to receive nick");
 		InputStream input = socket.getInputStream();
 		byte[] bytes = new byte[1024];
 		int bytesRead = input.read(bytes);
-		return new String(bytes, 0, bytesRead);
+		String nick = new String(bytes, 0, bytesRead);
+		LOGGER.debug("Nick " + nick + " received");
+		return nick;
 	}
 
 	public interface InviteManagerListener {

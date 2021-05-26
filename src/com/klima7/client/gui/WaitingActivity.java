@@ -41,13 +41,14 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onStart() {
+		super.onStart();
 		assistant = new WaitingAssistant(offer.getSocket(), nick, this);
 		assistant.start();
 	}
 
 	@Override
 	public void onStop() {
-		System.out.println("onStop");
+		super.onStop();
 		assistant.quit();
 	}
 
@@ -57,20 +58,17 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onPositionInQueueChanged(int position) {
-		System.out.println("onPositionchanged " + position);
 		setPosition(position);
 	}
 
 	@Override
 	public void onInvalidNick() {
-		System.out.println("onInvalidNick");
 		showErrorMessage("Nick conflict", "You opponent have the same nick. Change your nick and try again");
 		startActivity(new NickActivity());
 	}
 
 	@Override
 	public void onValidNick() {
-		System.out.println("onValidNick");
 		startActivity(new GameActivity());
 	}
 

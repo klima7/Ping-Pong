@@ -1,6 +1,8 @@
 package com.klima7.client.back;
 
 import com.klima7.app.back.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,8 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 public class WaitingAssistant extends Thread {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(WaitingAssistant.class);
 
 	private final Socket socket;
 	private final String nick;
@@ -22,18 +26,20 @@ public class WaitingAssistant extends Thread {
 
 	@Override
 	public void run() {
+		LOGGER.info("Starting WaitingAssistant");
+
 		try {
 			while(!interrupted()) {
 				String message = receiveMessage();
-				System.out.println("Received: " + message);
+				LOGGER.debug("Message received: " + message);
 				interpretMessage(message);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn("Exception during receiving occurred", e);
 			listener.onError();
-		} catch (InterruptedException e) {
-			System.out.println("WAITING ASSISTANT STOPPED");
-		}
+		} catch (InterruptedException ignored) { }
+
+		LOGGER.info("Stopping WaitingAssistant");
 	}
 
 	private String receiveMessage() throws IOException, InterruptedException {
@@ -69,7 +75,7 @@ public class WaitingAssistant extends Thread {
 			try {
 				sendNick();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.warn("Exception during sending nick occurred", e);
 				listener.onError();
 			}
 		}
@@ -79,13 +85,14 @@ public class WaitingAssistant extends Thread {
 				int position = Integer.parseInt(positionPart);
 				listener.onPositionInQueueChanged(position);
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				LOGGER.warn("Received position in queue is invalid: " + positionPart, e);
 				listener.onError();
 			}
 		}
 	}
 
 	private void sendNick() throws IOException {
+		LOGGER.debug("Sending nick: " + nick);
 		OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
 		output.write(nick);
 		output.flush();

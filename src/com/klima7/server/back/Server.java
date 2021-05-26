@@ -1,9 +1,14 @@
 package com.klima7.server.back;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.Socket;
 
 public class Server implements TcpManager.ConnectionListener, GameManager.GameManagerListener, InviteManager.InviteManagerListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
 	private static Server instance;
 
@@ -26,6 +31,8 @@ public class Server implements TcpManager.ConnectionListener, GameManager.GameMa
 		if(running)
 			return;
 
+		LOGGER.info("Starting server");
+
 		tcpManager = new TcpManager(this);
 		udpManager = new UdpManager(tcpManager.getPort(), nick);
 		queueManager = new QueueManager();
@@ -42,6 +49,8 @@ public class Server implements TcpManager.ConnectionListener, GameManager.GameMa
 		if(!running)
 			return;
 
+		LOGGER.info("Stopping server");
+
 		udpManager.stopListening();
 		tcpManager.stopListening();
 		running = false;
@@ -49,35 +58,29 @@ public class Server implements TcpManager.ConnectionListener, GameManager.GameMa
 
 	@Override
 	public synchronized void onConnection(Socket socket) {
-		System.out.println("onConnection");
+		LOGGER.info("onConnection triggered");
 		queueManager.add(socket);
-
 		inviteManager.invite(socket);
-
-//		if(!gameManager.isGameInProgress()) {
-//			onGameFinished();
-//		}
 	}
 
 	@Override
 	public void onNickInvalid(Socket socket) {
-		System.out.println("Server.onNickInvalid");
+		LOGGER.info("onNickInvalid triggered");
 	}
 
 	@Override
 	public void onNickValid(Client client) {
-		System.out.println("Server.onNickValid " + client.getNick());
+		LOGGER.info("onNickValid triggered");
 	}
 
 	@Override
 	public void onInviteError(Socket socket) {
-		System.out.println("Server.onInviteError");
+		LOGGER.info("onInviteError triggered");
 	}
 
 	@Override
 	public synchronized void onGameFinished() {
-		System.out.println("onGameFinished");
-
+		LOGGER.info("onGameFinished triggered");
 		if(queueManager.isEmpty())
 			return;
 	}

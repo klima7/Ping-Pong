@@ -1,6 +1,9 @@
 package com.klima7.client.back;
 
 import com.klima7.app.back.Constants;
+import com.klima7.server.back.TcpManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
@@ -10,9 +13,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class UdpDiscoverer {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(UdpDiscoverer.class);
+
 	public static final int DISCOVERY_TIME = 500;
 
 	public static List<Offer> discover() throws IOException {
+		LOGGER.info("Discovery started");
+
 		List<Offer> offers = new ArrayList<>();
 		MulticastSocket socket = createSocket();
 		sendDiscover();
@@ -20,8 +27,10 @@ public class UdpDiscoverer {
 		long startTime = System.currentTimeMillis();
 		do {
 			Offer offer = receiveMessage(socket);
-			if(offer != null)
+			if(offer != null) {
 				offers.add(offer);
+				LOGGER.info("Offer " + offer + " received");
+			}
 		} while(System.currentTimeMillis() - startTime < DISCOVERY_TIME);
 
 		closeSocketAndLeaveGroup(socket);
@@ -33,7 +42,7 @@ public class UdpDiscoverer {
 			try {
 				return discover();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.warn("Error during discovery occurred", e);
 				return null;
 			}
 		});
@@ -79,6 +88,7 @@ public class UdpDiscoverer {
 	}
 
 	private static void sendDiscover() throws IOException {
+		LOGGER.info("Sending DISCOVER message");
 		InetAddress inetAddress = InetAddress.getByName(Constants.DISCOVERY_GROUP);
 
 		DatagramSocket socket = new DatagramSocket();
