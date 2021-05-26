@@ -3,7 +3,7 @@ package com.klima7.server.back;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Server implements TcpManager.ConnectionListener {
+public class Server implements TcpManager.ConnectionListener, GameManager.GameManagerListener, InviteManager.InviteManagerListener {
 
 	private static Server instance;
 
@@ -29,7 +29,7 @@ public class Server implements TcpManager.ConnectionListener {
 		tcpManager = new TcpManager(this);
 		udpManager = new UdpManager(tcpManager.getPort(), nick);
 		queueManager = new QueueManager();
-		inviteManager = new InviteManager();
+		inviteManager = new InviteManager(this, nick);
 		gameManager = new GameManager();
 
 		udpManager.start();
@@ -48,9 +48,38 @@ public class Server implements TcpManager.ConnectionListener {
 	}
 
 	@Override
-	public void onConnection(Socket socket) {
+	public synchronized void onConnection(Socket socket) {
 		System.out.println("onConnection");
 		queueManager.add(socket);
+
+		inviteManager.invite(socket);
+
+//		if(!gameManager.isGameInProgress()) {
+//			onGameFinished();
+//		}
+	}
+
+	@Override
+	public void onNickInvalid(Socket socket) {
+		System.out.println("Server.onNickInvalid");
+	}
+
+	@Override
+	public void onNickValid(Client client) {
+		System.out.println("Server.onNickValid " + client.getNick());
+	}
+
+	@Override
+	public void onInviteError(Socket socket) {
+		System.out.println("Server.onInviteError");
+	}
+
+	@Override
+	public synchronized void onGameFinished() {
+		System.out.println("onGameFinished");
+
+		if(queueManager.isEmpty())
+			return;
 	}
 
 	public String getNick() {

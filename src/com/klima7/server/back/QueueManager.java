@@ -22,6 +22,10 @@ public class QueueManager {
 		return socket;
 	}
 
+	public boolean isEmpty() {
+		return queue.isEmpty();
+	}
+
 	private void sendCurrentPositionToAll() {
 		int position = 1;
 		for(Socket socket : queue) {

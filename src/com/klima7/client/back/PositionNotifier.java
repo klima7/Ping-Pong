@@ -66,6 +66,7 @@ public class PositionNotifier extends Thread {
 	private void sendNick() throws IOException {
 		OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
 		output.write(nick);
+		output.flush();
 	}
 
 	public void stopNotifying() {
