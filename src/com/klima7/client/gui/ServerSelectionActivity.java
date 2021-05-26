@@ -1,7 +1,7 @@
 package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
-import com.klima7.client.back.UdpDiscovery;
+import com.klima7.client.back.UdpDiscoverer;
 import com.klima7.client.back.Offer;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class ServerSelectionActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		UdpDiscovery.discoverAsync().thenAccept(this::updateList);
+		UdpDiscoverer.discoverAsync().thenAccept(this::updateList);
 	}
 
 	private void updateList(List<Offer> offers) {

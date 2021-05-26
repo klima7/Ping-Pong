@@ -4,14 +4,14 @@ import com.klima7.app.gui.Activity;
 import com.klima7.app.gui.GameActivity;
 import com.klima7.app.gui.NickActivity;
 import com.klima7.client.back.Offer;
-import com.klima7.client.back.PositionNotifier;
+import com.klima7.client.back.WaitingAssistant;
 
 import javax.swing.*;
 
-public class WaitingActivity extends Activity implements PositionNotifier.PositionNotifierListener {
+public class WaitingActivity extends Activity implements WaitingAssistant.PositionNotifierListener {
 
 	private Offer offer;
-	private PositionNotifier notifier;
+	private WaitingAssistant assistant;
 
 	private JLabel text;
 
@@ -39,9 +39,14 @@ public class WaitingActivity extends Activity implements PositionNotifier.Positi
 
 	@Override
 	public void onStart() {
-		System.out.println("OnStart");
-		notifier = new PositionNotifier(offer.getSocket(), "klima7", this);
-		notifier.start();
+		assistant = new WaitingAssistant(offer.getSocket(), "klima7", this);
+		assistant.start();
+	}
+
+	@Override
+	public void onStop() {
+		System.out.println("onStop");
+		assistant.quit();
 	}
 
 	private void cancelClicked() {
@@ -49,7 +54,7 @@ public class WaitingActivity extends Activity implements PositionNotifier.Positi
 	}
 
 	@Override
-	public void onPositionChanged(int position) {
+	public void onPositionInQueueChanged(int position) {
 		System.out.println("onPositionchanged " + position);
 		setPosition(position);
 	}

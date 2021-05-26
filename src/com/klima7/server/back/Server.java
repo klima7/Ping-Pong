@@ -52,7 +52,7 @@ public class Server implements TcpManager.ConnectionListener, GameManager.GameMa
 		System.out.println("onConnection");
 		queueManager.add(socket);
 
-		inviteManager.invite(socket);
+//		inviteManager.invite(socket);
 
 //		if(!gameManager.isGameInProgress()) {
 //			onGameFinished();

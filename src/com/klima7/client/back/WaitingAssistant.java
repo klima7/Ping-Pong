@@ -4,19 +4,17 @@ import com.klima7.app.back.Constants;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
-public class PositionNotifier extends Thread {
-
-	private boolean running;
+public class WaitingAssistant extends Thread {
 
 	private final Socket socket;
 	private final String nick;
 	private final PositionNotifierListener listener;
 
-	public PositionNotifier(Socket socket, String nick, PositionNotifierListener listener) {
+	public WaitingAssistant(Socket socket, String nick, PositionNotifierListener listener) {
 		this.socket = socket;
 		this.nick = nick;
 		this.listener = listener;
@@ -24,9 +22,8 @@ public class PositionNotifier extends Thread {
 
 	@Override
 	public void run() {
-		running = true;
 		try {
-			while(running) {
+			while(!interrupted()) {
 				String message = receiveMessage();
 				System.out.println("Received: " + message);
 				interpretMessage(message);
@@ -34,27 +31,41 @@ public class PositionNotifier extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 			listener.onError();
+		} catch (InterruptedException e) {
+			System.out.println("WAITING ASSISTANT STOPPED");
+			return;
 		}
 	}
 
-	private String receiveMessage() throws IOException {
+	private String receiveMessage() throws IOException, InterruptedException {
 		String message = "";
 		InputStream input = socket.getInputStream();
+		socket.setSoTimeout(100);
 
-		char c;
+		char c = 0;
 		do {
-			c = (char)input.read();
-			message += c;
+			try {
+				c = (char)input.read();
+				message += c;
+			} catch (SocketTimeoutException ignored) {}
+
+			if(interrupted())
+				throw new InterruptedException();
+
 		} while(c != Constants.COMMAND_END);
 
 		return message.substring(0, message.length()-1);
 	}
 
 	private void interpretMessage(String message) {
-		if(message.equals("NICK INVALID"))
+		if(message.equals("NICK INVALID")) {
 			listener.onInvalidNick();
-		else if(message.equals("NICK VALID"))
+			interrupt();
+		}
+		else if(message.equals("NICK VALID")) {
 			listener.onValidNick();
+			interrupt();
+		}
 		else if(message.equals("INVITE")) {
 			try {
 				sendNick();
@@ -67,7 +78,7 @@ public class PositionNotifier extends Thread {
 			String positionPart = message.substring(9);
 			try {
 				int position = Integer.parseInt(positionPart);
-				listener.onPositionChanged(position);
+				listener.onPositionInQueueChanged(position);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 				listener.onError();
@@ -81,12 +92,12 @@ public class PositionNotifier extends Thread {
 		output.flush();
 	}
 
-	public void stopNotifying() {
-		running = false;
+	public void quit() {
+		interrupt();
 	}
 
 	public interface PositionNotifierListener {
-		void onPositionChanged(int position);
+		void onPositionInQueueChanged(int position);
 		void onInvalidNick();
 		void onValidNick();
 		void onError();
