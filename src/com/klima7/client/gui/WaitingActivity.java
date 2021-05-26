@@ -1,6 +1,6 @@
-package com.klima7.client;
+package com.klima7.client.gui;
 
-import com.klima7.app.Activity;
+import com.klima7.app.gui.Activity;
 
 import javax.swing.*;
 

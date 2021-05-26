@@ -1,11 +1,10 @@
-package com.klima7.app;
+package com.klima7.app.gui;
 
-import com.klima7.client.ServerSelectionActivity;
-import com.klima7.server.Server;
-import com.klima7.server.ServerIdleActivity;
+import com.klima7.client.gui.ServerSelectionActivity;
+import com.klima7.server.back.Server;
+import com.klima7.server.gui.ServerIdleActivity;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class ModuleActivity extends Activity {
 

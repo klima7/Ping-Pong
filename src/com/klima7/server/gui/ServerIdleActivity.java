@@ -1,7 +1,7 @@
-package com.klima7.server;
+package com.klima7.server.gui;
 
-import com.klima7.app.Activity;
-import com.klima7.app.ModuleActivity;
+import com.klima7.app.gui.Activity;
+import com.klima7.server.back.Server;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class ServerIdleActivity extends Activity {
 		server = Server.getInstance();
 
 		try {
-			server.startDiscoveryListen();
+			server.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

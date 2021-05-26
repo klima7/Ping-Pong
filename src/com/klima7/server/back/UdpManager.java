@@ -1,12 +1,12 @@
-package com.klima7.server;
+package com.klima7.server.back;
 
-import com.klima7.app.Constants;
+import com.klima7.app.back.Constants;
 
 import java.io.IOException;
 import java.net.*;
 
 
-public class DiscoveryListener extends Thread {
+public class UdpManager extends Thread {
 
 	private int offeringPort;
 	private String nick;
@@ -14,7 +14,7 @@ public class DiscoveryListener extends Thread {
 	private boolean running;
 	private MulticastSocket socket;
 
-	public DiscoveryListener(int offeringPort, String nick) throws IOException {
+	public UdpManager(int offeringPort, String nick) throws IOException {
 		this.offeringPort = offeringPort;
 		this.nick = nick;
 		this.running = true;

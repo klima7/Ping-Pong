@@ -1,4 +1,4 @@
-package com.klima7.client;
+package com.klima7.client.back;
 
 import java.net.InetAddress;
 

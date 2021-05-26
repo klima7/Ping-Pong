@@ -1,10 +1,11 @@
-package com.klima7.client;
+package com.klima7.client.gui;
 
-import com.klima7.app.Activity;
+import com.klima7.app.gui.Activity;
+import com.klima7.client.back.DiscoverySender;
+import com.klima7.client.back.Offer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 

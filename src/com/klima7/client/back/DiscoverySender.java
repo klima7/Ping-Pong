@@ -1,6 +1,6 @@
-package com.klima7.client;
+package com.klima7.client.back;
 
-import com.klima7.app.Constants;
+import com.klima7.app.back.Constants;
 
 import java.io.IOException;
 import java.net.*;
