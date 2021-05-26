@@ -37,7 +37,7 @@ public class ModuleActivity extends Activity {
 	}
 
 	private void clientSelected() {
-		startActivity(new ServerSelectionActivity());
+		startActivity(new ServerSelectionActivity(nick));
 	}
 
 	private void serverSelected() {

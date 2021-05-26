@@ -33,7 +33,6 @@ public class WaitingAssistant extends Thread {
 			listener.onError();
 		} catch (InterruptedException e) {
 			System.out.println("WAITING ASSISTANT STOPPED");
-			return;
 		}
 	}
 

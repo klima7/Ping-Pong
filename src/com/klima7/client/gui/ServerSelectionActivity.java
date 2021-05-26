@@ -12,8 +12,14 @@ import java.util.List;
 
 public class ServerSelectionActivity extends Activity {
 
+	private String nick;
+
 	private JList<Offer> list;
 	private final List<Offer> entries = new ArrayList<>();
+
+	public ServerSelectionActivity(String nick) {
+		this.nick = nick;
+	}
 
 	@Override
 	public void initUI() {
@@ -72,6 +78,6 @@ public class ServerSelectionActivity extends Activity {
 			return;
 		}
 
-		startActivity(new WaitingActivity(offer));
+		startActivity(new WaitingActivity(nick, offer));
 	}
 }

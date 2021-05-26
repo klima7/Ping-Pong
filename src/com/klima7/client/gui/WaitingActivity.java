@@ -10,12 +10,14 @@ import javax.swing.*;
 
 public class WaitingActivity extends Activity implements WaitingAssistant.PositionNotifierListener {
 
+	private String nick;
 	private Offer offer;
 	private WaitingAssistant assistant;
 
 	private JLabel text;
 
-	public WaitingActivity(Offer offer) {
+	public WaitingActivity(String nick, Offer offer) {
+		this.nick = nick;
 		this.offer = offer;
 	}
 
@@ -39,7 +41,7 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onStart() {
-		assistant = new WaitingAssistant(offer.getSocket(), "klima7", this);
+		assistant = new WaitingAssistant(offer.getSocket(), nick, this);
 		assistant.start();
 	}
 
@@ -50,7 +52,7 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 	}
 
 	private void cancelClicked() {
-		startActivity(new ServerSelectionActivity());
+		startActivity(new ServerSelectionActivity(nick));
 	}
 
 	@Override
