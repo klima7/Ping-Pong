@@ -71,6 +71,7 @@ public class Server implements TcpManager.ConnectionListener, GameManager.GameMa
 	@Override
 	public void onNickValid(Client client) {
 		LOGGER.info("onNickValid triggered");
+		gameManager.startGame(client);
 	}
 
 	@Override

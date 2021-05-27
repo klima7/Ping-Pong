@@ -31,10 +31,10 @@ public class NickActivity extends Activity {
 
 	private void okClicked() {
 		String nick = nickField.getText();
-		if(nick.length() < MIN_NICK_LENGTH) {
-			showInfoMessage("Nick too short", "You nick must have at least " + MIN_NICK_LENGTH + " characters");
-			return;
-		}
+//		if(nick.length() < MIN_NICK_LENGTH) {
+//			showInfoMessage("Nick too short", "You nick must have at least " + MIN_NICK_LENGTH + " characters");
+//			return;
+//		}
 		startActivity(new ModuleActivity(nick));
 	}
 }
