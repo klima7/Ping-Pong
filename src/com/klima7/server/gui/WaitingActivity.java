@@ -6,9 +6,14 @@ import com.klima7.server.back.Server;
 import javax.swing.*;
 import java.io.IOException;
 
-public class ServerIdleActivity extends Activity {
+public class WaitingActivity extends Activity {
 
+	private String nick;
 	private Server server;
+
+	public WaitingActivity(String nick) {
+		this.nick = nick;
+	}
 
 	@Override
 	public void initUI() {
@@ -26,7 +31,7 @@ public class ServerIdleActivity extends Activity {
 		server = Server.getInstance();
 
 		try {
-			server.start();
+			server.start(nick);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

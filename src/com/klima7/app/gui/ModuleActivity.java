@@ -2,7 +2,7 @@ package com.klima7.app.gui;
 
 import com.klima7.client.gui.ServerSelectionActivity;
 import com.klima7.server.back.Server;
-import com.klima7.server.gui.ServerIdleActivity;
+import com.klima7.server.gui.WaitingActivity;
 
 import javax.swing.*;
 
@@ -41,8 +41,6 @@ public class ModuleActivity extends Activity {
 	}
 
 	private void serverSelected() {
-		Server server = Server.getInstance();
-		server.setNick(nick);
-		startActivity(new ServerIdleActivity());
+		startActivity(new WaitingActivity(nick));
 	}
 }
