@@ -157,9 +157,9 @@ public abstract class GameActivity extends Activity {
 
 	private void drawPlayers(Graphics2D g2) {
 		g2.setPaint(Color.red);
-		g2.fillRect(MAP_X+MAP_WIDTH+5, MAP_Y+(int) myPosition, 10, PLAYER_WIDTH);
+		g2.fillRect(MAP_X+MAP_WIDTH, MAP_Y+(int) myPosition, 10, PLAYER_WIDTH);
 		if(this.data != null)
-			g2.fillRect(MAP_X-15, MAP_Y+data.getPlayerPosition(), 10, PLAYER_WIDTH);
+			g2.fillRect(MAP_X-10, MAP_Y+data.getPlayerPosition(), 10, PLAYER_WIDTH);
 	}
 
 	private void drawBall(Graphics2D g2) {

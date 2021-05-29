@@ -19,7 +19,6 @@ public class ClientGameActivity extends GameActivity {
 		try {
 			GameData data = GameData.getFromStream(dis);
 			setData(data);
-			System.out.println(data.getBallPosition().x);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
