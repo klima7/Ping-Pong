@@ -69,8 +69,9 @@ public class Server implements TcpManager.ConnectionListener {
 			try {
 				Socket socket = queueManager.pop();
 				String client_nick = inviteManager.invite(socket);
-				if (client_nick != null)
+				if (client_nick != null) {
 					return new Client(client_nick, socket);
+				}
 			} catch (InterruptedException | IOException ignored) {}
 		}
 	}

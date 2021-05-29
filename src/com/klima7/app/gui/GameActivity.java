@@ -1,15 +1,25 @@
 package com.klima7.app.gui;
 
-import static com.klima7.app.back.Constants.*;
 import com.klima7.app.back.GameData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.klima7.app.back.Constants.*;
+
 public abstract class GameActivity extends Activity {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GameActivity.class);
 
 	public static final int MAP_X = 50;
 	public static final int MAP_Y = 60;
@@ -22,19 +32,25 @@ public abstract class GameActivity extends Activity {
 	private double myPosition = 100;
 
 	private GameData data;
-
+	private Socket socket;
 	private Timer timer;
 
-	public GameActivity(String myNick, String opponentNick) {
+	private GameListener listener;
+
+	public GameActivity(String myNick, String opponentNick, Socket socket) {
 		this.myNick = myNick;
 		this.opponentNick = opponentNick;
+		this.socket = socket;
 
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
+				updateData();
 				updateGame(10);
+				triggerSendData();
 				repaint();
+
 			}
 		}, 0, 10);
 	}
@@ -60,9 +76,16 @@ public abstract class GameActivity extends Activity {
 				myVelocity = 0;
 			}
 		});
+
+		try {
+			listener = new GameListener(socket.getInputStream());
+			listener.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	void updateGame(int elapsedMillis) {
+	protected void updateGame(int elapsedMillis) {
 		myPosition += this.myVelocity *elapsedMillis;
 
 		if(myPosition < 0) {
@@ -76,13 +99,20 @@ public abstract class GameActivity extends Activity {
 		}
 	}
 
+	private void triggerSendData() {
+		try {
+			DataOutputStream os = new DataOutputStream(socket.getOutputStream());
+			sendData(os);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
 		configRender(g2);
-
-		data = getData();
 
 		drawBackground(g2);
 		drawGameArea(g2);
@@ -144,5 +174,33 @@ public abstract class GameActivity extends Activity {
 		return (int)myPosition;
 	}
 
-	abstract public GameData getData();
+	public void setData(GameData data) {
+		this.data = data;
+	}
+
+	public void updateData() {};
+
+	public abstract void receiveData(DataInputStream dis);
+
+	public abstract void sendData(DataOutputStream dos);
+
+
+	private class GameListener extends Thread {
+
+		private final DataInputStream dis;
+
+		public GameListener(InputStream is) {
+			this.dis = new DataInputStream(is);
+		}
+
+		@Override
+		public void run() {
+			LOGGER.info("Starting GameListener");
+			while(!Thread.interrupted()) {
+				receiveData(dis);
+			}
+			LOGGER.info("Exiting GameListener");
+		}
+	}
+
 }

@@ -1,6 +1,7 @@
 package com.klima7.app.back;
 
 import java.awt.*;
+import java.io.*;
 
 public class GameData {
 
@@ -30,5 +31,25 @@ public class GameData {
 
 	public int getOpponentScore() {
 		return opponentScore;
+	}
+
+	public void sendToStream(OutputStream os) throws IOException {
+		DataOutputStream dos = new DataOutputStream(os);
+		dos.writeInt(playerPosition);
+		dos.writeInt(ballPosition.x);
+		dos.writeInt(ballPosition.y);
+		dos.writeInt(myScore);
+		dos.writeInt(opponentScore);
+		dos.flush();
+	}
+
+	public static GameData getFromStream(InputStream is) throws IOException {
+		DataInputStream dis = new DataInputStream(is);
+		int playerPosition = dis.readInt();
+		int ballX = dis.readInt();
+		int ballY = dis.readInt();
+		int myScore = dis.readInt();
+		int opponentScore = dis.readInt();
+		return new GameData(playerPosition, new Point(ballX, ballY), myScore, opponentScore);
 	}
 }

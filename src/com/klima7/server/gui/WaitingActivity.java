@@ -37,7 +37,7 @@ public class WaitingActivity extends Activity {
 		}
 
 		server.takeFromQueueAsync().thenAccept(client -> {
-			startActivity(new ServerGameActivity(nick, client.getNick()));
+			startActivity(new ServerGameActivity(nick, client));
 		});
 	}
 }
