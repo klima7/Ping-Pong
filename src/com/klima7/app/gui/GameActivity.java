@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameActivity extends Activity {
+public abstract class GameActivity extends Activity {
 
 	public static final int MAP_X = 50;
 	public static final int MAP_Y = 60;
@@ -82,6 +82,8 @@ public class GameActivity extends Activity {
 		Graphics2D g2 = (Graphics2D)g;
 		configRender(g2);
 
+		data = getData();
+
 		drawBackground(g2);
 		drawGameArea(g2);
 		drawNicks(g2);
@@ -135,16 +137,12 @@ public class GameActivity extends Activity {
 			return;
 
 		g2.setPaint(Color.YELLOW);
-		int baseX = MAP_X + MAP_WIDTH/2;
-		int baseY = MAP_Y;
-		g2.fillOval(baseX+data.getBallPosition().x, baseY+data.getBallPosition().y, BALL_SIZE, BALL_SIZE);
+		g2.fillOval(MAP_X+data.getBallPosition().x, MAP_Y+data.getBallPosition().y, BALL_SIZE, BALL_SIZE);
 	}
 
 	public int getPosition() {
 		return (int)myPosition;
 	}
 
-	public void setData(GameData data) {
-		this.data = data;
-	}
+	abstract public GameData getData();
 }
