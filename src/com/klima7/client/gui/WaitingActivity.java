@@ -69,7 +69,7 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onValidNick() {
-		startActivity(new GameActivity());
+		startActivity(new GameActivity(nick, offer.getNick()));
 	}
 
 	@Override

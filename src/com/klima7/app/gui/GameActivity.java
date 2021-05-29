@@ -20,8 +20,8 @@ public class GameActivity extends Activity {
 
 	private double myVelocity;
 
-	private String myNick = "klima7";
-	private String opponentNick = "opponent";
+	private final String myNick;
+	private final String opponentNick;
 	private int myPoints;
 	private int opponentPoints;
 	private double myPos = 100;
@@ -30,7 +30,10 @@ public class GameActivity extends Activity {
 
 	private Timer timer;
 
-	public GameActivity() {
+	public GameActivity(String myNick, String opponentNick) {
+		this.myNick = myNick;
+		this.opponentNick = opponentNick;
+
 		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override

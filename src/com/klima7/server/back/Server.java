@@ -60,17 +60,17 @@ public class Server implements TcpManager.ConnectionListener {
 		queueManager.add(socket);
 	}
 
-	public CompletableFuture<Socket> takeFromQueueAsync() {
+	public CompletableFuture<Client> takeFromQueueAsync() {
 		return CompletableFuture.supplyAsync(() -> takeFromQueue());
 	}
 
-	public Socket takeFromQueue() {
+	public Client takeFromQueue() {
 		while(true) {
 			try {
 				Socket socket = queueManager.pop();
-				boolean invite_success = inviteManager.invite(socket);
-				if (invite_success)
-					return socket;
+				String client_nick = inviteManager.invite(socket);
+				if (client_nick != null)
+					return new Client(client_nick, socket);
 			} catch (InterruptedException | IOException ignored) {}
 		}
 	}

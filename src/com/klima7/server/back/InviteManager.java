@@ -19,7 +19,7 @@ public class InviteManager {
 		this.serverNick = serverNick;
 	}
 
-	public boolean invite(Socket socket) throws IOException {
+	public String invite(Socket socket) throws IOException {
 		LOGGER.info("Inviting process started");
 
 		sendInviteMessage(socket);
@@ -28,13 +28,13 @@ public class InviteManager {
 		if(nick.equals(serverNick)) {
 			LOGGER.info("Nick " + nick + " is invalid");
 			sendNickInvalidMessage(socket);
-			return false;
+			return null;
 		}
 
 		else {
 			LOGGER.info("Nick " + nick + " is valid");
 			sendNickValidMessage(socket);
-			return true;
+			return nick;
 		}
 	}
 

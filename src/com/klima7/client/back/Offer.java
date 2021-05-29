@@ -25,6 +25,10 @@ public class Offer {
 		return socket;
 	}
 
+	public String getNick() {
+		return nick;
+	}
+
 	@Override
 	public String toString() {
 		return this.nick + " - " + address.getHostAddress() + ":" + port;
