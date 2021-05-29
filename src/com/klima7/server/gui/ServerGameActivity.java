@@ -28,7 +28,6 @@ public class ServerGameActivity extends GameActivity {
 		try {
 			int position = dis.readInt();
 			simulation.setClientPosition(position);
-			System.out.println("Received " + position);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -49,5 +48,6 @@ public class ServerGameActivity extends GameActivity {
 	public void updateData() {
 		if(simulation == null) return;
 		setData(simulation.getServerData());
+		simulation.setServerPosition(getPosition());
 	}
 }

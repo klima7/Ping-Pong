@@ -1,5 +1,6 @@
 package com.klima7.client.gui;
 
+import com.klima7.app.back.GameData;
 import com.klima7.app.gui.GameActivity;
 import com.klima7.client.back.Offer;
 
@@ -15,7 +16,13 @@ public class ClientGameActivity extends GameActivity {
 
 	@Override
 	public void receiveData(DataInputStream dis) {
-
+		try {
+			GameData data = GameData.getFromStream(dis);
+			setData(data);
+			System.out.println(data.getBallPosition().x);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

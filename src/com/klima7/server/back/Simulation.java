@@ -32,7 +32,7 @@ public class Simulation {
 	}
 
 	public synchronized GameData getClientData() {
-		Point ballPosition = new Point((int)-ballX, (int)ballY);
+		Point ballPosition = new Point((int)(MAP_WIDTH-ballX), (int)ballY);
 		return new GameData(serverPosition, ballPosition, clientPoints, serverPoints);
 	}
 
