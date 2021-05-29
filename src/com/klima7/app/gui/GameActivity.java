@@ -1,5 +1,8 @@
 package com.klima7.app.gui;
 
+import com.klima7.app.back.Constants;
+import com.klima7.app.back.GameData;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -8,25 +11,18 @@ import java.util.TimerTask;
 
 public class GameActivity extends Activity {
 
-	public static final int MAP_WIDTH = 600;
-	public static final int MAP_HEIGHT = 360;
 	public static final int MAP_X = 50;
 	public static final int MAP_Y = 60;
-
-	public static final int PLAYER_WIDTH = 40;
 	public static final double PLAYER_SPEED = 0.4;
-
 	public static final int BALL_SIZE = 10;
-
-	private double myVelocity;
 
 	private final String myNick;
 	private final String opponentNick;
-	private int myPoints;
-	private int opponentPoints;
-	private double myPos = 100;
-	private int opponentPos = 100;
-	private Point ballPosition = new Point(40, 40);
+
+	private double myVelocity = 0;
+	private double myPosition = 100;
+
+	private GameData data;
 
 	private Timer timer;
 
@@ -68,15 +64,15 @@ public class GameActivity extends Activity {
 	}
 
 	void updateGame(int elapsedMillis) {
-		myPos += this.myVelocity *elapsedMillis;
+		myPosition += this.myVelocity *elapsedMillis;
 
-		if(myPos < 0) {
-			myPos = 0;
+		if(myPosition < 0) {
+			myPosition = 0;
 			myVelocity = 0;
 		}
 
-		if(myPos > MAP_HEIGHT - PLAYER_WIDTH) {
-			myPos = MAP_HEIGHT - PLAYER_WIDTH;
+		if(myPosition > Constants.MAP_HEIGHT - Constants.PLAYER_WIDTH) {
+			myPosition = Constants.MAP_HEIGHT - Constants.PLAYER_WIDTH;
 			myVelocity = 0;
 		}
 	}
@@ -108,7 +104,7 @@ public class GameActivity extends Activity {
 
 	private void drawGameArea(Graphics2D g2) {
 		g2.setPaint(Color.GREEN);
-		g2.fillRect(MAP_X, MAP_Y, MAP_WIDTH, MAP_HEIGHT);
+		g2.fillRect(MAP_X, MAP_Y, Constants.MAP_WIDTH, Constants.MAP_HEIGHT);
 		g2.setPaint(Color.WHITE);
 		g2.setStroke(new BasicStroke(4));
 		g2.drawLine(350, 60, 350, 420);
@@ -122,20 +118,34 @@ public class GameActivity extends Activity {
 	}
 
 	private void drawPoints(Graphics2D g2) {
-		String text = opponentPoints + ":" + myPoints;
+		if(this.data == null)
+			return;
+		String text = data.getOpponentScore() + ":" + data.getMyScore();
 		g2.drawString(text, 330, 40);
 	}
 
 	private void drawPlayers(Graphics2D g2) {
 		g2.setPaint(Color.red);
-		g2.fillRect(MAP_X-15, MAP_Y+opponentPos, 10, PLAYER_WIDTH);
-		g2.fillRect(MAP_X+MAP_WIDTH+5, MAP_Y+(int)myPos, 10, PLAYER_WIDTH);
+		g2.fillRect(MAP_X+Constants.MAP_WIDTH+5, MAP_Y+(int) myPosition, 10, Constants.PLAYER_WIDTH);
+		if(this.data != null)
+			g2.fillRect(MAP_X-15, MAP_Y+data.getPlayerPosition(), 10, Constants.PLAYER_WIDTH);
 	}
 
 	private void drawBall(Graphics2D g2) {
+		if(this.data == null)
+			return;
+
 		g2.setPaint(Color.YELLOW);
-		int baseX = MAP_X + MAP_WIDTH/2;
+		int baseX = MAP_X + Constants.MAP_WIDTH/2;
 		int baseY = MAP_Y;
-		g2.fillOval(baseX+ballPosition.x, baseY+ballPosition.y, BALL_SIZE, BALL_SIZE);
+		g2.fillOval(baseX+data.getBallPosition().x, baseY+data.getBallPosition().y, BALL_SIZE, BALL_SIZE);
+	}
+
+	public int getPosition() {
+		return (int)myPosition;
+	}
+
+	public void setData(GameData data) {
+		this.data = data;
 	}
 }
