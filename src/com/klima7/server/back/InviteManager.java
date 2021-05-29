@@ -8,44 +8,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.concurrent.CompletableFuture;
 
 public class InviteManager {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InviteManager.class);
 
-	private final InviteManagerListener listener;
 	private final String serverNick;
 
-	public InviteManager(InviteManagerListener listener, String serverNick) {
-		this.listener = listener;
+	public InviteManager(String serverNick) {
 		this.serverNick = serverNick;
 	}
 
-	public void invite(Socket socket) {
-		CompletableFuture.runAsync(() -> inviteBlocking(socket));
-	}
-
-	private void inviteBlocking(Socket socket) {
+	public boolean invite(Socket socket) throws IOException {
 		LOGGER.info("Inviting process started");
 
-		try {
-			sendInviteMessage(socket);
-			String nick = receiveNick(socket);
+		sendInviteMessage(socket);
+		String nick = receiveNick(socket);
 
-			if(nick.equals(serverNick)) {
-				LOGGER.info("Nick " + nick + " is invalid");
-				sendNickInvalidMessage(socket);
-				listener.onNickInvalid(socket);
-			}
-			else {
-				LOGGER.info("Nick " + nick + " is valid");
-				sendNickValidMessage(socket);
-				listener.onNickValid(new Client(nick, socket));
-			}
-		} catch (IOException e) {
-			LOGGER.warn("Exception during invite process occurred", e);
-			listener.onInviteError(socket);
+		if(nick.equals(serverNick)) {
+			LOGGER.info("Nick " + nick + " is invalid");
+			sendNickInvalidMessage(socket);
+			return false;
+		}
+
+		else {
+			LOGGER.info("Nick " + nick + " is valid");
+			sendNickValidMessage(socket);
+			return true;
 		}
 	}
 
@@ -81,11 +70,5 @@ public class InviteManager {
 		String nick = new String(bytes, 0, bytesRead);
 		LOGGER.debug("Nick " + nick + " received");
 		return nick;
-	}
-
-	public interface InviteManagerListener {
-		void onNickInvalid(Socket socket);
-		void onNickValid(Client client);
-		void onInviteError(Socket socket);
 	}
 }

@@ -59,7 +59,6 @@ public class GameActivity extends Activity {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				super.keyReleased(e);
-				System.out.println("Released");
 				myVelocity = 0;
 			}
 		});

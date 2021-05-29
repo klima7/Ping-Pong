@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
 
 public class Server implements TcpManager.ConnectionListener {
 
@@ -17,6 +18,7 @@ public class Server implements TcpManager.ConnectionListener {
 	private TcpManager tcpManager;
 	private UdpManager udpManager;
 	private QueueManager queueManager;
+	private InviteManager inviteManager;
 
 	public static Server getInstance() {
 		if(instance == null)
@@ -33,6 +35,7 @@ public class Server implements TcpManager.ConnectionListener {
 		tcpManager = new TcpManager(this);
 		udpManager = new UdpManager(tcpManager.getPort(), nick);
 		queueManager = new QueueManager();
+		inviteManager = new InviteManager(nick);
 
 		udpManager.start();
 		tcpManager.start();
@@ -55,5 +58,20 @@ public class Server implements TcpManager.ConnectionListener {
 	public synchronized void onConnection(Socket socket) {
 		LOGGER.info("onConnection triggered");
 		queueManager.add(socket);
+	}
+
+	public CompletableFuture<Socket> takeFromQueueAsync() {
+		return CompletableFuture.supplyAsync(() -> takeFromQueue());
+	}
+
+	public Socket takeFromQueue() {
+		while(true) {
+			try {
+				Socket socket = queueManager.pop();
+				boolean invite_success = inviteManager.invite(socket);
+				if (invite_success)
+					return socket;
+			} catch (InterruptedException | IOException ignored) {}
+		}
 	}
 }

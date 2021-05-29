@@ -1,6 +1,7 @@
 package com.klima7.server.gui;
 
 import com.klima7.app.gui.Activity;
+import com.klima7.app.gui.GameActivity;
 import com.klima7.server.back.Server;
 
 import javax.swing.*;
@@ -35,5 +36,9 @@ public class WaitingActivity extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		server.takeFromQueueAsync().thenAccept(socket -> {
+			startActivity(new GameActivity());
+		});
 	}
 }
