@@ -4,6 +4,7 @@ import com.klima7.app.back.GameData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -33,6 +34,7 @@ public abstract class GameActivity extends Activity {
 	private GameData data;
 	private Socket socket;
 	private Timer timer;
+	private TimerTask loopTask;
 
 	private GameListener listener;
 
@@ -41,17 +43,26 @@ public abstract class GameActivity extends Activity {
 		this.opponentNick = opponentNick;
 		this.socket = socket;
 
+		setLayout(null);
+
+		JButton backButton = new JButton("Back");
+		backButton.setFont(backButton.getFont().deriveFont(15f));
+		backButton.setBounds(10, 20, 100, 30);
+		backButton.addActionListener(e -> backClicked());
+		add(backButton);
+
 		timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
+		loopTask = new TimerTask() {
 			@Override
 			public void run() {
 				updateData();
 				updateGame(10);
 				triggerSendData();
 				repaint();
-
 			}
-		}, 0, 10);
+		};
+
+		timer.scheduleAtFixedRate(loopTask, 0, 10);
 	}
 
 	@Override
@@ -88,6 +99,14 @@ public abstract class GameActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		listener.interrupt();
+		loopTask.cancel();
+		timer.purge();
+	}
+
+	public void backClicked() {
+		try {
+			socket.close();
+		} catch (IOException ignored) { }
 	}
 
 	protected void updateGame(int elapsedMillis) {
@@ -149,8 +168,8 @@ public abstract class GameActivity extends Activity {
 	private void drawNicks(Graphics2D g2) {
 		g2.setPaint(Color.BLACK);
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 25f));
-		g2.drawString(opponentNick, 100, 40);
-		g2.drawString(myNick, 500, 40);
+		g2.drawString(opponentNick, 200, 40);
+		g2.drawString(myNick, 400, 40);
 	}
 
 	private void drawPoints(Graphics2D g2) {
@@ -207,5 +226,4 @@ public abstract class GameActivity extends Activity {
 			LOGGER.info("Exiting GameListener");
 		}
 	}
-
 }

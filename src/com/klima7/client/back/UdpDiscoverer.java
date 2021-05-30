@@ -1,7 +1,6 @@
 package com.klima7.client.back;
 
 import com.klima7.app.back.Constants;
-import com.klima7.server.back.TcpManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ public class UdpDiscoverer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UdpDiscoverer.class);
 
-	public static final int DISCOVERY_TIME = 500;
+	public static final int DISCOVERY_TIME = 300;
 
 	public static List<Offer> discover() throws IOException {
 		LOGGER.info("Discovery started");

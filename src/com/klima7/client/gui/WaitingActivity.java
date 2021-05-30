@@ -1,7 +1,6 @@
 package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
-import com.klima7.app.gui.GameActivity;
 import com.klima7.app.gui.NickActivity;
 import com.klima7.client.back.Offer;
 import com.klima7.client.back.WaitingAssistant;

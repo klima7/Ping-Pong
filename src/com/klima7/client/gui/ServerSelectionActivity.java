@@ -1,6 +1,7 @@
 package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
+import com.klima7.app.gui.ModuleActivity;
 import com.klima7.client.back.UdpDiscoverer;
 import com.klima7.client.back.Offer;
 
@@ -38,9 +39,21 @@ public class ServerSelectionActivity extends Activity {
 				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		add(list);
 
+		JButton backButton = new JButton("Back");
+		backButton.setFont(backButton.getFont().deriveFont(40f));
+		backButton.setBounds(100, 390, 150, 50);
+		backButton.addActionListener(e -> backClicked());
+		add(backButton);
+
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.setFont(refreshButton.getFont().deriveFont(35f));
+		refreshButton.setBounds(260, 390, 180, 50);
+		refreshButton.addActionListener(e -> refreshClicked());
+		add(refreshButton);
+
 		JButton okButton = new JButton("OK");
 		okButton.setFont(okButton.getFont().deriveFont(40f));
-		okButton.setBounds(100, 390, 500, 50);
+		okButton.setBounds(450, 390, 150, 50);
 		okButton.addActionListener(e -> okClicked());
 		add(okButton);
 	}
@@ -52,6 +65,8 @@ public class ServerSelectionActivity extends Activity {
 	}
 
 	private void updateList(List<Offer> offers) {
+		System.out.println("Updating list with " + offers.size());
+		entries.clear();
 		for(Offer offer : offers) {
 			addOffer(offer);
 		}
@@ -79,5 +94,15 @@ public class ServerSelectionActivity extends Activity {
 		}
 
 		startActivity(new WaitingActivity(nick, offer));
+	}
+
+	private void backClicked() {
+		System.out.println("Back clicked");
+		startActivity(new ModuleActivity(nick));
+	}
+
+	private void refreshClicked() {
+		System.out.println("refresh clicked");
+		UdpDiscoverer.discoverAsync().thenAccept(this::updateList);
 	}
 }

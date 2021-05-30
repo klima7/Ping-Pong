@@ -34,6 +34,12 @@ public class ModuleActivity extends Activity {
 		serverButton.setBounds(370, 150, 300, 200);
 		serverButton.addActionListener(e -> serverSelected());
 		add(serverButton);
+
+		JButton backButton = new JButton("Back");
+		backButton.setFont(backButton.getFont().deriveFont(40f));
+		backButton.setBounds(200, 380, 300, 50);
+		backButton.addActionListener(e -> backSelected());
+		add(backButton);
 	}
 
 	private void clientSelected() {
@@ -42,5 +48,9 @@ public class ModuleActivity extends Activity {
 
 	private void serverSelected() {
 		startActivity(new WaitingActivity(nick));
+	}
+
+	private void backSelected() {
+		startActivity(new NickActivity());
 	}
 }

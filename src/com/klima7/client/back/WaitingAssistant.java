@@ -37,7 +37,9 @@ public class WaitingAssistant extends Thread {
 		} catch (IOException e) {
 			LOGGER.warn("Exception during receiving occurred", e);
 			listener.onError();
-		} catch (InterruptedException ignored) { }
+		} catch (InterruptedException ignored) {
+			listener.onError();
+		}
 
 		LOGGER.info("Stopping WaitingAssistant");
 	}
@@ -47,14 +49,16 @@ public class WaitingAssistant extends Thread {
 		InputStream input = socket.getInputStream();
 		socket.setSoTimeout(100);
 
-		char c = 0;
+		// TODO: refactor this fragment
+		int c = 0;
 		do {
 			try {
-				c = (char)input.read();
-				message += c;
+				c = input.read();
+				message += (char)c;
 			} catch (SocketTimeoutException ignored) {}
 
-			if(interrupted())
+			System.out.println(c);
+			if(isInterrupted() || c==-1)
 				throw new InterruptedException();
 
 		} while(c != Constants.COMMAND_END);

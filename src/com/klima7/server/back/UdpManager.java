@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.*;
 
 
@@ -15,35 +16,36 @@ public class UdpManager extends Thread {
 	private final int offeringPort;
 	private final String nick;
 
-	private boolean running;
 	private final MulticastSocket socket;
 
 	public UdpManager(int offeringPort, String nick) throws IOException {
 		this.offeringPort = offeringPort;
 		this.nick = nick;
-		this.running = true;
 
 		socket = new MulticastSocket(Constants.DISCOVERY_PORT);
 		socket.setReuseAddress(true);
+		socket.setSoTimeout(100);
 
 		InetSocketAddress groupAddress = new InetSocketAddress(InetAddress.getByName(Constants.DISCOVERY_GROUP), 0);
 		socket.joinGroup(groupAddress, NetworkInterface.getByName("wlan0"));
 	}
 
 	public void stopListening() {
-		running = false;
+		interrupt();
 	}
 
 	@Override
 	public void run() {
 		LOGGER.info("Running");
-		while(running)
-			receiveAndProcessDatagram();
+		try {
+			while(true)
+				receiveAndProcessDatagram();
+		} catch (InterruptedException e) { }
 		closeSocketAndLeaveGroup();
 		LOGGER.info("Quiting thread");
 	}
 
-	private void receiveAndProcessDatagram() {
+	private void receiveAndProcessDatagram() throws InterruptedException {
 		try {
 			String message = receiveMessage();
 			LOGGER.debug("Datagram received: " + message);
@@ -59,11 +61,18 @@ public class UdpManager extends Thread {
 		return message.equals("DISCOVER");
 	}
 
-	private String receiveMessage() throws IOException {
+	private String receiveMessage() throws IOException, InterruptedException {
 		byte[] receiveData = new byte[100];
 		DatagramPacket packet = new DatagramPacket(receiveData, receiveData.length);
-		socket.receive(packet);
-		return new String(packet.getData(), packet.getOffset(), packet.getLength());
+		while(true) {
+			try {
+				socket.receive(packet);
+				return new String(packet.getData(), packet.getOffset(), packet.getLength());
+			} catch (SocketTimeoutException e) {
+				if (isInterrupted())
+					throw new InterruptedException();
+			}
+		}
 	}
 
 	private void sendOffer() throws IOException {
