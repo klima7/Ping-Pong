@@ -3,7 +3,7 @@ package com.klima7.server.gui;
 import com.klima7.app.back.GameData;
 import com.klima7.app.gui.GameActivity;
 import com.klima7.server.back.Client;
-import com.klima7.server.back.Simulation;
+import com.klima7.server.back.simulation.Simulation;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
