@@ -20,7 +20,8 @@ public class ClientGameActivity extends GameActivity {
 			GameData data = GameData.getFromStream(dis);
 			setData(data);
 		} catch (IOException e) {
-			e.printStackTrace();
+			showErrorMessage("Connection error", "Connection lost");
+			startActivity(new ServerSelectionActivity(myNick));
 		}
 	}
 
@@ -29,7 +30,8 @@ public class ClientGameActivity extends GameActivity {
 		try {
 			dos.writeInt(getPosition());
 		} catch (IOException e) {
-			e.printStackTrace();
+//			showErrorMessage("Connection error", "Connection lost");
+//			startActivity(new ServerSelectionActivity(myNick));
 		}
 	}
 }

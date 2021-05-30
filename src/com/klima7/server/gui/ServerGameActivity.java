@@ -2,6 +2,7 @@ package com.klima7.server.gui;
 
 import com.klima7.app.back.GameData;
 import com.klima7.app.gui.GameActivity;
+import com.klima7.client.gui.ServerSelectionActivity;
 import com.klima7.server.back.Client;
 import com.klima7.server.back.simulation.Simulation;
 
@@ -24,12 +25,20 @@ public class ServerGameActivity extends GameActivity {
 	}
 
 	@Override
+	public void onStop() {
+		super.onStop();
+		simulation.stop();
+	}
+
+	@Override
 	public void receiveData(DataInputStream dis) {
 		try {
 			int position = dis.readInt();
 			simulation.setClientPosition(position);
 		} catch (IOException e) {
-			e.printStackTrace();
+			simulation.stop();
+			showErrorMessage("Client disconnected", "Client disconnected");
+			startActivity(new WaitingActivity(myNick));
 		}
 	}
 
@@ -40,7 +49,6 @@ public class ServerGameActivity extends GameActivity {
 			GameData clientData = simulation.getClientData();
 			clientData.sendToStream(dos);
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

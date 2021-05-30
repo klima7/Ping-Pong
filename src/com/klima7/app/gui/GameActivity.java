@@ -24,7 +24,7 @@ public abstract class GameActivity extends Activity {
 	public static final int MAP_X = 50;
 	public static final int MAP_Y = 60;
 
-	private final String myNick;
+	protected final String myNick;
 	private final String opponentNick;
 
 	private double myVelocity = 0;
@@ -82,6 +82,12 @@ public abstract class GameActivity extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		listener.interrupt();
 	}
 
 	protected void updateGame(int elapsedMillis) {
