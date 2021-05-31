@@ -43,7 +43,7 @@ public class ModuleActivity extends Activity {
 	}
 
 	private void clientSelected() {
-		startActivity(new ServerSelectionActivity(nick));
+		startActivity(new ServerSelectionActivity(nick, true));
 	}
 
 	private void serverSelected() {

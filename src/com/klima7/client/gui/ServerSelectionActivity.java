@@ -2,6 +2,7 @@ package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
 import com.klima7.app.gui.ModuleActivity;
+import com.klima7.client.back.LastServer;
 import com.klima7.client.back.Offer;
 import com.klima7.client.back.UdpDiscoverer;
 
@@ -14,9 +15,16 @@ public class ServerSelectionActivity extends Activity {
 
 	private String nick;
 	private JList<Offer> list;
+	private LastServer lastServer = new LastServer();
+	private boolean queryLastServer;
+
+	public ServerSelectionActivity(String nick, boolean queryLastServer) {
+		this.nick = nick;
+		this.queryLastServer = queryLastServer;
+	}
 
 	public ServerSelectionActivity(String nick) {
-		this.nick = nick;
+		this(nick, false);
 	}
 
 	@Override
@@ -58,7 +66,11 @@ public class ServerSelectionActivity extends Activity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		UdpDiscoverer.discoverAsync().thenAccept(this::updateList);
+		UdpDiscoverer.discoverAsync().thenAccept(servers -> {
+			updateList(servers);
+			if(queryLastServer)
+				queryAboutLastServer(servers);
+		});
 	}
 
 	private void updateList(List<Offer> offers) {
@@ -76,13 +88,12 @@ public class ServerSelectionActivity extends Activity {
 		}
 
 		try {
-			offer.connect();
+			lastServer.set(offer);
 		} catch (IOException e) {
-			showErrorMessage("Connection error", "Unable to connect to server");
-			return;
+			e.printStackTrace();
 		}
 
-		startActivity(new WaitingActivity(nick, offer));
+		connectWithServer(offer);
 	}
 
 	private void backClicked() {
@@ -93,5 +104,42 @@ public class ServerSelectionActivity extends Activity {
 	private void refreshClicked() {
 		System.out.println("refresh clicked");
 		UdpDiscoverer.discoverAsync().thenAccept(this::updateList);
+	}
+
+	private void queryAboutLastServer(List<Offer> offers) {
+		Offer lastOffer = null;
+		try {
+			lastOffer = lastServer.get();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		for(Offer offer : offers) {
+			if(lastOffer.addressEquals(offer)) {
+				boolean connectLast = showQueryDialog(offer);
+				if(connectLast) {
+					connectWithServer(offer);
+				}
+			}
+		}
+	}
+
+	private void connectWithServer(Offer offer) {
+		try {
+			offer.connect();
+		} catch (IOException e) {
+			showErrorMessage("Connection error", "Unable to connect to server");
+			return;
+		}
+
+		startActivity(new WaitingActivity(nick, offer));
+	}
+
+	private boolean showQueryDialog(Offer offer) {
+		String message = "Would you like to connect with last server?\n" + offer;
+		int res = JOptionPane.showInternalConfirmDialog(getContext().getContentPane(), message, "Last server",
+				JOptionPane.YES_NO_OPTION);
+		return res == JOptionPane.YES_OPTION;
 	}
 }

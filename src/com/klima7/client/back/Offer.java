@@ -29,8 +29,20 @@ public class Offer {
 		return nick;
 	}
 
+	public InetAddress getAddress() {
+		return address;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
 	@Override
 	public String toString() {
 		return this.nick + " - " + address.getHostAddress() + ":" + port;
+	}
+
+	public boolean addressEquals(Offer other) {
+		return address.equals(other.address) && port == other.port;
 	}
 }
