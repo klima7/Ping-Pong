@@ -34,9 +34,13 @@ public class TcpManager extends Thread {
 				Socket socket = serverSocket.accept();
 				LOGGER.info("New connection");
 				listener.onConnection(socket);
-			} catch (IOException e) {
-				LOGGER.warn("Exception during accepting connection occurred", e);
-			}
+			} catch (IOException ignored) { }
+		}
+
+		try {
+			this.serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		LOGGER.info("Quiting thread");
 	}
@@ -51,7 +55,9 @@ public class TcpManager extends Thread {
 			int port = random.nextInt(MAX_PORT_NUMBER - MIN_PORT_NUMBER) + MIN_PORT_NUMBER;
 
 			try {
-				return new ServerSocket(port);
+				ServerSocket socket = new ServerSocket(port);
+				socket.setSoTimeout(100);
+				return socket;
 			} catch (IOException ignored) { }
 		}
 	}

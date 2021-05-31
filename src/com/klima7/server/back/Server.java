@@ -51,6 +51,7 @@ public class Server implements TcpManager.ConnectionListener {
 
 		udpManager.stopListening();
 		tcpManager.stopListening();
+		queueManager.closeAll();
 		running = false;
 	}
 

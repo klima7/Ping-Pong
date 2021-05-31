@@ -53,7 +53,7 @@ public class WaitingAssistant extends Thread {
 				String message = input.readUTF();
 				System.out.println("Message received");
 				return message;
-			} catch (IOException e) {
+			} catch (SocketTimeoutException e) {
 				if(isInterrupted()) {
 					throw new InterruptedException();
 				}

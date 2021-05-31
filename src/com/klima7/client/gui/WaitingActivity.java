@@ -73,7 +73,9 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onError() {
-		showErrorMessage("Connection error", "Connection with this server has been broken");
+		showErrorMessage("Connection error", "Connection with server lost");
+		assistant.quit();
+		startActivity(new ServerSelectionActivity(nick));
 	}
 
 	private void setPosition(int position) {

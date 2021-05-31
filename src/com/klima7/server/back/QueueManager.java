@@ -50,4 +50,13 @@ public class QueueManager {
 		}
 	}
 
+	public void closeAll() {
+		for(Socket socket : queue) {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
