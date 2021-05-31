@@ -15,7 +15,6 @@ public class TcpManager extends Thread {
 	public static final int MIN_PORT_NUMBER = 1;
 	public static final int MAX_PORT_NUMBER = 65_535;
 
-	private boolean running;
 	private final ConnectionListener listener;
 	private final ServerSocket serverSocket;
 
@@ -27,9 +26,8 @@ public class TcpManager extends Thread {
 
 	@Override
 	public void run() {
-		LOGGER.info("Running");
-		running = true;
-		while(running) {
+		LOGGER.info("Tcp listening started");
+		while(!interrupted()) {
 			try {
 				Socket socket = serverSocket.accept();
 				LOGGER.info("New connection");
@@ -42,7 +40,7 @@ public class TcpManager extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		LOGGER.info("Quiting thread");
+		LOGGER.info("Tcp listening stopped");
 	}
 
 	public int getPort() {
@@ -63,8 +61,7 @@ public class TcpManager extends Thread {
 	}
 
 	public void stopListening() {
-		LOGGER.info("Stopping listening");
-		running = false;
+		interrupt();
 	}
 
 	public interface ConnectionListener {

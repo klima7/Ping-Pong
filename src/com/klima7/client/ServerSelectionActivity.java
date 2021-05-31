@@ -11,10 +11,10 @@ import java.util.List;
 
 public class ServerSelectionActivity extends Activity {
 
-	private String nick;
+	private final String nick;
 	private JList<Offer> list;
-	private LastServer lastServer = new LastServer();
-	private boolean queryLastServer;
+	private final LastServer lastServer = new LastServer();
+	private final boolean queryLastServer;
 
 	public ServerSelectionActivity(String nick, boolean queryLastServer) {
 		this.nick = nick;
@@ -90,7 +90,7 @@ public class ServerSelectionActivity extends Activity {
 			e.printStackTrace();
 		}
 
-		connectWithServer(offer);
+		connectToServer(offer);
 	}
 
 	private void backClicked() {
@@ -102,7 +102,7 @@ public class ServerSelectionActivity extends Activity {
 	}
 
 	private void queryAboutLastServer(List<Offer> offers) {
-		Offer lastOffer = null;
+		Offer lastOffer;
 		try {
 			lastOffer = lastServer.get();
 		} catch (IOException e) {
@@ -114,13 +114,13 @@ public class ServerSelectionActivity extends Activity {
 			if(lastOffer.addressEquals(offer)) {
 				boolean connectLast = showQueryDialog(offer);
 				if(connectLast) {
-					connectWithServer(offer);
+					connectToServer(offer);
 				}
 			}
 		}
 	}
 
-	private void connectWithServer(Offer offer) {
+	private void connectToServer(Offer offer) {
 		try {
 			Socket socket = new Socket(offer.getAddress(), offer.getPort());
 			startActivity(new WaitingActivity(nick, offer.getNick(), socket));

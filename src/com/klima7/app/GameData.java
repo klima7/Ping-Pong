@@ -5,10 +5,6 @@ import java.io.*;
 
 public class GameData {
 
-	public static final int STATUS_PENDING = 0;
-	public static final int STATUS_WON = 1;
-	public static final int STATUS_LOST = 2;
-
 	private final int playerPosition;
 	private final Point ballPosition;
 	private final int myScore;

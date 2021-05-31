@@ -57,7 +57,6 @@ public class Server implements TcpManager.ConnectionListener {
 
 	@Override
 	public synchronized void onConnection(Socket socket) {
-		LOGGER.info("onConnection triggered");
 		queueManager.add(socket);
 	}
 

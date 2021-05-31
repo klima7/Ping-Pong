@@ -19,45 +19,29 @@ public class InviteManager {
 	}
 
 	public String invite(Socket socket) throws IOException {
-		LOGGER.info("Inviting process started");
+		LOGGER.info("Inviting started");
 
-		sendInviteMessage(socket);
+		sendMessage(socket, "INVITE");
 		String nick = receiveNick(socket);
 
 		if(nick.equals(serverNick)) {
 			LOGGER.info("Nick " + nick + " is invalid");
-			sendNickInvalidMessage(socket);
+			sendMessage(socket, "NICK INVALID");
 			return null;
 		}
 
 		else {
 			LOGGER.info("Nick " + nick + " is valid");
-			sendNickValidMessage(socket);
+			sendMessage(socket, "NICK VALID");
 			return nick;
 		}
 	}
 
-	private void sendInviteMessage(Socket socket) throws IOException {
-		sendMessage(socket, "INVITE");
-	}
-
-	private void sendNickValidMessage(Socket socket) {
-		sendMessage(socket, "NICK VALID");
-	}
-
-	private void sendNickInvalidMessage(Socket socket) {
-		sendMessage(socket, "NICK INVALID");
-	}
-
-	private void sendMessage(Socket socket, String message) {
+	private void sendMessage(Socket socket, String message) throws IOException {
 		LOGGER.debug("Sending message " + message);
-		try {
-			DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-			output.writeUTF(message);
-			output.flush();
-		} catch (IOException e) {
-			LOGGER.warn("Exception occurred during sending this message: " + message, e);
-		}
+		DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+		output.writeUTF(message);
+		output.flush();
 	}
 
 	private String receiveNick(Socket socket) throws IOException {

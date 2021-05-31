@@ -12,12 +12,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class UdpDiscoverer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UdpDiscoverer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WaitingAssistant.class);
 
 	public static final int DISCOVERY_TIME = 300;
 
 	public static List<Offer> discover() throws IOException {
-		LOGGER.info("Discovery started");
+		LOGGER.info("Discovering started");
 
 		List<Offer> offers = new ArrayList<>();
 		MulticastSocket socket = createSocket();
@@ -28,7 +28,6 @@ public class UdpDiscoverer {
 			Offer offer = receiveMessage(socket);
 			if(offer != null) {
 				offers.add(offer);
-				LOGGER.info("Offer " + offer + " received");
 			}
 		} while(System.currentTimeMillis() - startTime < DISCOVERY_TIME);
 
@@ -41,7 +40,6 @@ public class UdpDiscoverer {
 			try {
 				return discover();
 			} catch (IOException e) {
-				LOGGER.warn("Error during discovery occurred", e);
 				return null;
 			}
 		});
@@ -74,6 +72,7 @@ public class UdpDiscoverer {
 
 		try {
 			int port =  Integer.parseInt(parts[1]);
+			LOGGER.info("Offer received");
 			return new Offer(packet.getAddress(), port, parts[2]);
 		} catch(NumberFormatException e) {
 			return null;
@@ -87,7 +86,8 @@ public class UdpDiscoverer {
 	}
 
 	private static void sendDiscover() throws IOException {
-		LOGGER.info("Sending DISCOVER message");
+		LOGGER.info("Sending DISCOVER");
+
 		InetAddress inetAddress = InetAddress.getByName(Constants.DISCOVERY_GROUP);
 
 		DatagramSocket socket = new DatagramSocket();

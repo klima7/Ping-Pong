@@ -23,8 +23,6 @@ public class WaitingAssistant extends Thread {
 
 	@Override
 	public void run() {
-		LOGGER.info("Starting WaitingAssistant");
-
 		try {
 			while(!interrupted()) {
 				String message = receiveMessage();
@@ -34,11 +32,7 @@ public class WaitingAssistant extends Thread {
 		} catch (IOException e) {
 			LOGGER.warn("Exception during receiving occurred", e);
 			listener.onError();
-		} catch (InterruptedException ignored) {
-			listener.onError();
-		}
-
-		LOGGER.info("Stopping WaitingAssistant");
+		} catch (InterruptedException ignored) {}
 	}
 
 	private String receiveMessage() throws IOException, InterruptedException {
@@ -48,6 +42,7 @@ public class WaitingAssistant extends Thread {
 		while(true) {
 			try {
 				String message = input.readUTF();
+				LOGGER.info("Message received: " + message);
 				return message;
 			} catch (SocketTimeoutException e) {
 				if(isInterrupted()) {

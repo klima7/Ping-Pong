@@ -35,29 +35,25 @@ public class UdpManager extends Thread {
 
 	@Override
 	public void run() {
-		LOGGER.info("Running");
+		LOGGER.info("Udp listening started");
 		try {
 			while(true)
 				receiveAndProcessDatagram();
 		} catch (InterruptedException e) { }
 		closeSocketAndLeaveGroup();
-		LOGGER.info("Quiting thread");
+		LOGGER.info("Udp listening stopped");
 	}
 
 	private void receiveAndProcessDatagram() throws InterruptedException {
 		try {
 			String message = receiveMessage();
 			LOGGER.debug("Datagram received: " + message);
-			if(isDiscoveryMessage(message)) {
+			if(message.equals("DISCOVER")) {
 				sendOffer();
 			}
 		} catch(IOException e) {
 			LOGGER.warn("Exception during receiving occurred", e);
 		}
-	}
-
-	private boolean isDiscoveryMessage(String message) {
-		return message.equals("DISCOVER");
 	}
 
 	private String receiveMessage() throws IOException, InterruptedException {
@@ -90,7 +86,7 @@ public class UdpManager extends Thread {
 	}
 
 	private void closeSocketAndLeaveGroup() {
-		LOGGER.info("Closing socket and leaving multicast group");
+		LOGGER.info("Closing socket and leaving group");
 		try {
 			InetSocketAddress groupAddress = new InetSocketAddress(InetAddress.getByName(Constants.DISCOVERY_GROUP), 0);
 			socket.leaveGroup(groupAddress, NetworkInterface.getByName("wlan0"));

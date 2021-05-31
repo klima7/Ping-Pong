@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class WaitingActivity extends Activity {
 
-	private String nick;
+	private final String nick;
 	private Server server;
 
 	public WaitingActivity(String nick) {

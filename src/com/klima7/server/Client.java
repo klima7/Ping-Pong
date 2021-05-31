@@ -4,8 +4,8 @@ import java.net.Socket;
 
 public class Client {
 
-	private String nick;
-	private Socket socket;
+	private final String nick;
+	private final Socket socket;
 
 	public Client(String nick, Socket socket) {
 		this.nick = nick;

@@ -30,7 +30,7 @@ public class QueueManager {
 	}
 
 	private void sendCurrentPositionToAll() {
-		LOGGER.debug("Sending new position to all sockets");
+		LOGGER.info("Sending new position to all sockets");
 		int position = 1;
 		for(Socket socket : queue) {
 			sendPosition(socket, position++);
@@ -38,7 +38,7 @@ public class QueueManager {
 	}
 
 	private void sendPosition(Socket socket, int position) {
-		LOGGER.debug("Sending new position " + position);
+		LOGGER.info("Sending new position " + position);
 		try {
 			DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 			String message = "POSITION " + position;
@@ -50,6 +50,7 @@ public class QueueManager {
 	}
 
 	public void closeAll() {
+		LOGGER.info("Closing all sockets in queue");
 		for(Socket socket : queue) {
 			try {
 				socket.close();

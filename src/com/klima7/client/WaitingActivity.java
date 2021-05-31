@@ -8,9 +8,9 @@ import java.net.Socket;
 
 public class WaitingActivity extends Activity implements WaitingAssistant.PositionNotifierListener {
 
-	private String myNick;
-	private String serverNick;
-	private Socket socket;
+	private final String myNick;
+	private final String serverNick;
+	private final Socket socket;
 	private WaitingAssistant assistant;
 
 	private JLabel text;
