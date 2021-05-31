@@ -4,9 +4,9 @@ import com.klima7.app.back.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class InviteManager {
@@ -50,24 +50,21 @@ public class InviteManager {
 		sendMessage(socket, "NICK INVALID");
 	}
 
-	private void sendMessage(Socket socket, String text) {
-		LOGGER.debug("Sending message " + text);
+	private void sendMessage(Socket socket, String message) {
+		LOGGER.debug("Sending message " + message);
 		try {
-			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
-			String message = text + Constants.COMMAND_END;
-			output.write(message);
+			DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+			output.writeUTF(message);
 			output.flush();
 		} catch (IOException e) {
-			LOGGER.warn("Exception occurred during sending this message: " + text, e);
+			LOGGER.warn("Exception occurred during sending this message: " + message, e);
 		}
 	}
 
 	private String receiveNick(Socket socket) throws IOException {
 		LOGGER.debug("Waiting to receive nick");
-		InputStream input = socket.getInputStream();
-		byte[] bytes = new byte[1024];
-		int bytesRead = input.read(bytes);
-		String nick = new String(bytes, 0, bytesRead);
+		DataInputStream input = new DataInputStream(socket.getInputStream());
+		String nick = input.readUTF();
 		LOGGER.debug("Nick " + nick + " received");
 		return nick;
 	}

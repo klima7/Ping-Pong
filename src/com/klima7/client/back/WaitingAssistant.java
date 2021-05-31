@@ -4,9 +4,7 @@ import com.klima7.app.back.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
@@ -45,25 +43,22 @@ public class WaitingAssistant extends Thread {
 	}
 
 	private String receiveMessage() throws IOException, InterruptedException {
-		String message = "";
-		InputStream input = socket.getInputStream();
+		DataInputStream input = new DataInputStream(socket.getInputStream());
 		socket.setSoTimeout(100);
 
-		// TODO: refactor this fragment
-		int c = 0;
-		do {
+		System.out.println("Receiving message");
+
+		while(true) {
 			try {
-				c = input.read();
-				message += (char)c;
-			} catch (SocketTimeoutException ignored) {}
-
-			System.out.println(c);
-			if(isInterrupted() || c==-1)
-				throw new InterruptedException();
-
-		} while(c != Constants.COMMAND_END);
-
-		return message.substring(0, message.length()-1);
+				String message = input.readUTF();
+				System.out.println("Message received");
+				return message;
+			} catch (IOException e) {
+				if(isInterrupted()) {
+					throw new InterruptedException();
+				}
+			}
+		}
 	}
 
 	private void interpretMessage(String message) {
@@ -97,8 +92,8 @@ public class WaitingAssistant extends Thread {
 
 	private void sendNick() throws IOException {
 		LOGGER.debug("Sending nick: " + nick);
-		OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
-		output.write(nick);
+		DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+		output.writeUTF(nick);
 		output.flush();
 	}
 

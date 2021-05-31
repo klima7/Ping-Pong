@@ -4,8 +4,8 @@ import com.klima7.app.back.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -41,9 +41,9 @@ public class QueueManager {
 	private void sendPosition(Socket socket, int position) {
 		LOGGER.debug("Sending new position " + position);
 		try {
-			OutputStreamWriter output = new OutputStreamWriter(socket.getOutputStream());
-			String message = "POSITION " + position + Constants.COMMAND_END;
-			output.write(message);
+			DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+			String message = "POSITION " + position;
+			output.writeUTF(message);
 			output.flush();
 		} catch (IOException e) {
 			LOGGER.warn("Exception during sending position", e);
