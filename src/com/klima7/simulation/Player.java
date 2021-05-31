@@ -1,6 +1,6 @@
-package com.klima7.server.back.simulation;
+package com.klima7.simulation;
 
-import com.klima7.app.back.Constants;
+import com.klima7.app.Constants;
 
 public class Player extends Sprite {
 

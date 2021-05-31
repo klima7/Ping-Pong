@@ -1,4 +1,4 @@
-package com.klima7.server.back.simulation;
+package com.klima7.simulation;
 
 class Sprite {
 

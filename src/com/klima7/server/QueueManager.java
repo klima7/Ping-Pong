@@ -1,6 +1,5 @@
-package com.klima7.server.back;
+package com.klima7.server;
 
-import com.klima7.app.back.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

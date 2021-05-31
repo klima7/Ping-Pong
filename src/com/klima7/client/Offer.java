@@ -1,4 +1,4 @@
-package com.klima7.client.back;
+package com.klima7.client;
 
 import java.io.IOException;
 import java.net.InetAddress;

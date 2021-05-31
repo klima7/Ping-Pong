@@ -1,9 +1,7 @@
-package com.klima7.client.gui;
+package com.klima7.client;
 
-import com.klima7.app.back.GameData;
-import com.klima7.app.gui.GameActivity;
-import com.klima7.app.gui.ModuleActivity;
-import com.klima7.client.back.Offer;
+import com.klima7.app.GameData;
+import com.klima7.app.GameActivity;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

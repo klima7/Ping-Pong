@@ -1,8 +1,7 @@
-package com.klima7.app.gui;
+package com.klima7.app;
 
-import com.klima7.client.gui.ServerSelectionActivity;
-import com.klima7.server.back.Server;
-import com.klima7.server.gui.WaitingActivity;
+import com.klima7.client.ServerSelectionActivity;
+import com.klima7.server.WaitingActivity;
 
 import javax.swing.*;
 

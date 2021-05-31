@@ -1,12 +1,9 @@
-package com.klima7.server.gui;
+package com.klima7.server;
 
-import com.klima7.app.back.GameData;
-import com.klima7.app.gui.GameActivity;
-import com.klima7.app.gui.ModuleActivity;
-import com.klima7.client.gui.ServerSelectionActivity;
-import com.klima7.server.back.Client;
-import com.klima7.server.back.Server;
-import com.klima7.server.back.simulation.Simulation;
+import com.klima7.app.GameData;
+import com.klima7.app.GameActivity;
+import com.klima7.app.ModuleActivity;
+import com.klima7.simulation.Simulation;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

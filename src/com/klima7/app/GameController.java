@@ -1,4 +1,4 @@
-package com.klima7.app.back;
+package com.klima7.app;
 
 import java.awt.*;
 

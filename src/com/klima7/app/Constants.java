@@ -1,4 +1,4 @@
-package com.klima7.app.back;
+package com.klima7.app;
 
 public class Constants {
 

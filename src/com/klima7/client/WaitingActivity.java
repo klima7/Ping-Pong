@@ -1,9 +1,7 @@
-package com.klima7.client.gui;
+package com.klima7.client;
 
-import com.klima7.app.gui.Activity;
-import com.klima7.app.gui.NickActivity;
-import com.klima7.client.back.Offer;
-import com.klima7.client.back.WaitingAssistant;
+import com.klima7.app.Activity;
+import com.klima7.app.NickActivity;
 
 import javax.swing.*;
 

@@ -1,4 +1,4 @@
-package com.klima7.app.gui;
+package com.klima7.app;
 
 import javax.swing.*;
 

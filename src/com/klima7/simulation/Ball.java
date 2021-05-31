@@ -1,6 +1,6 @@
-package com.klima7.server.back.simulation;
+package com.klima7.simulation;
 
-import static com.klima7.app.back.Constants.*;
+import static com.klima7.app.Constants.*;
 
 public class Ball extends Sprite {
 

@@ -1,10 +1,7 @@
-package com.klima7.client.gui;
+package com.klima7.client;
 
-import com.klima7.app.gui.Activity;
-import com.klima7.app.gui.ModuleActivity;
-import com.klima7.client.back.LastServer;
-import com.klima7.client.back.Offer;
-import com.klima7.client.back.UdpDiscoverer;
+import com.klima7.app.Activity;
+import com.klima7.app.ModuleActivity;
 
 import javax.swing.*;
 import java.awt.*;

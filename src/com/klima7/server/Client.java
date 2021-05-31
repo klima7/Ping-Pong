@@ -1,4 +1,4 @@
-package com.klima7.server.back;
+package com.klima7.server;
 
 import java.net.Socket;
 

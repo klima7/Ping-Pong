@@ -1,6 +1,6 @@
-package com.klima7.app.gui;
+package com.klima7.app;
 
-import com.klima7.server.back.TcpManager;
+import com.klima7.server.TcpManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,12 +1,12 @@
-package com.klima7.server.back.simulation;
+package com.klima7.simulation;
 
-import com.klima7.app.back.GameData;
+import com.klima7.app.GameData;
 
 import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.klima7.app.back.Constants.*;
+import static com.klima7.app.Constants.*;
 
 
 public class Simulation {

@@ -1,8 +1,7 @@
-package com.klima7.server.gui;
+package com.klima7.server;
 
-import com.klima7.app.gui.Activity;
-import com.klima7.app.gui.ModuleActivity;
-import com.klima7.server.back.Server;
+import com.klima7.app.Activity;
+import com.klima7.app.ModuleActivity;
 
 import javax.swing.*;
 import java.io.IOException;

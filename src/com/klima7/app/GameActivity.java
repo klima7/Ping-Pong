@@ -1,8 +1,5 @@
-package com.klima7.app.gui;
+package com.klima7.app;
 
-import com.klima7.app.back.Constants;
-import com.klima7.app.back.GameData;
-import com.klima7.server.back.TcpManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +15,7 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.klima7.app.back.Constants.*;
+import static com.klima7.app.Constants.*;
 
 public abstract class GameActivity extends Activity {
 
