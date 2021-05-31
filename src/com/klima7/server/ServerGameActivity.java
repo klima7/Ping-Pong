@@ -13,7 +13,7 @@ import java.io.IOException;
 public class ServerGameActivity extends GameActivity {
 
 	private final Simulation simulation = new Simulation();
-	private boolean controlledDisconnection = false;
+	private boolean expectedDisconnect = false;
 
 	public ServerGameActivity(String myNick, Client client) {
 		super(myNick, client.getNick(), client.getSocket());
@@ -33,7 +33,7 @@ public class ServerGameActivity extends GameActivity {
 
 	@Override
 	public void backClicked() {
-		controlledDisconnection = true;
+		expectedDisconnect = true;
 		try {
 			Server.getInstance().stop();
 		} catch (IOException e) {
@@ -48,37 +48,42 @@ public class ServerGameActivity extends GameActivity {
 			int position = dis.readInt();
 			simulation.setClientPosition(position);
 		} catch (IOException e) {
-			if(controlledDisconnection) return;
+			if(expectedDisconnect)
+				return;
+
 			simulation.stop();
-			showErrorMessage("Client disconnected", "Client disconnected");
+			showInfoMessage("Client disconnected", "Click ok to wait for another client");
 			startActivity(new WaitingActivity(myNick));
 		}
 	}
 
 	@Override
-	public void sendData(DataOutputStream dos) {
-		try {
-			if(simulation == null) return;
-			GameData clientData = simulation.getClientData();
-			clientData.sendToStream(dos);
-		} catch (IOException e) {
-		}
+	public void sendData(DataOutputStream dos) throws IOException {
+		if(simulation == null)
+			return;
+
+		GameData clientData = simulation.getClientData();
+		clientData.sendToStream(dos);
 	}
 
 	@Override
 	public void updateData() {
-		if(simulation == null) return;
+		if(simulation == null)
+			return;
+
 		GameData gameData = simulation.getServerData();
 		setData(gameData);
 		simulation.setServerPosition(getPosition());
+
 		if(gameData.getStatus() == GameStatus.WON) {
-			controlledDisconnection = true;
+			expectedDisconnect = true;
 			showInfoMessage("You won!", "Congratulation!");
 			startActivity(new WaitingActivity(myNick));
 		}
+
 		else if(gameData.getStatus() == GameStatus.LOST) {
-			controlledDisconnection = true;
-			showInfoMessage("You lost!", "Maybe next time");
+			expectedDisconnect = true;
+			showInfoMessage("You lost!", "Try again!");
 			startActivity(new WaitingActivity(myNick));
 		}
 	}

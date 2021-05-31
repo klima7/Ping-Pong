@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class ClientGameActivity extends GameActivity {
 
-	private boolean controlledDisconnection = false;
+	private boolean expectedDisconnect = false;
 
 	public ClientGameActivity(String myNick, Offer offer) {
 		super(myNick, offer.getNick(), offer.getSocket());
@@ -18,7 +18,7 @@ public class ClientGameActivity extends GameActivity {
 
 	@Override
 	public void backClicked() {
-		controlledDisconnection = true;
+		expectedDisconnect = true;
 		startActivity(new ServerSelectionActivity(myNick));
 	}
 
@@ -27,28 +27,30 @@ public class ClientGameActivity extends GameActivity {
 		try {
 			GameData data = GameData.getFromStream(dis);
 			setData(data);
+
 			if(data.getStatus() == GameStatus.WON) {
-				controlledDisconnection = true;
+				expectedDisconnect = true;
 				showInfoMessage("You won!", "Congratulation!");
 				startActivity(new ServerSelectionActivity(myNick));
 			}
+
 			else if(data.getStatus() == GameStatus.LOST) {
-				controlledDisconnection = true;
+				expectedDisconnect = true;
 				showInfoMessage("You lost!", "Maybe next time");
 				startActivity(new ServerSelectionActivity(myNick));
 			}
+
 		} catch (IOException e) {
-			if(controlledDisconnection)
+			if(expectedDisconnect)
 				return;
-			showErrorMessage("Connection error", "Connection lost");
+
+			showInfoMessage("Server disconnected", "Press ok and select another server");
 			startActivity(new ServerSelectionActivity(myNick));
 		}
 	}
 
 	@Override
-	public void sendData(DataOutputStream dos) {
-		try {
-			dos.writeInt(getPosition());
-		} catch (IOException ignored) { }
+	public void sendData(DataOutputStream dos) throws IOException {
+		dos.writeInt(getPosition());
 	}
 }

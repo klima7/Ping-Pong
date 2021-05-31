@@ -60,7 +60,7 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onInvalidNick() {
-		showErrorMessage("Nick conflict", "You opponent have the same nick. Change your nick and try again");
+		showErrorMessage("Nick conflict", "You opponent have the same nick. Click ok and change nick");
 		startActivity(new NickActivity());
 	}
 

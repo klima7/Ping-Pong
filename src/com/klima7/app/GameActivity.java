@@ -114,6 +114,7 @@ public abstract class GameActivity extends Activity {
 	@Override
 	public void onStop() {
 		super.onStop();
+
 		listener.interrupt();
 		loopTask.cancel();
 		timer.purge();
@@ -141,9 +142,7 @@ public abstract class GameActivity extends Activity {
 		try {
 			DataOutputStream os = new DataOutputStream(socket.getOutputStream());
 			sendData(os);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException ignored) { }
 	}
 
 	@Override
@@ -221,7 +220,7 @@ public abstract class GameActivity extends Activity {
 
 	public abstract void receiveData(DataInputStream dis);
 
-	public abstract void sendData(DataOutputStream dos);
+	public abstract void sendData(DataOutputStream dos) throws IOException;
 
 	public abstract void backClicked();
 
@@ -237,8 +236,9 @@ public abstract class GameActivity extends Activity {
 		@Override
 		public void run() {
 			LOGGER.info("Starting Listener");
-			while(!Thread.interrupted())
+			while(!Thread.interrupted()) {
 				receiveData(dis);
+			}
 			LOGGER.info("Exiting Listener");
 		}
 	}
