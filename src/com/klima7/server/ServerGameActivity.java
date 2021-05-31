@@ -2,6 +2,7 @@ package com.klima7.server;
 
 import com.klima7.app.GameData;
 import com.klima7.app.GameActivity;
+import com.klima7.app.GameStatus;
 import com.klima7.app.ModuleActivity;
 import com.klima7.simulation.Simulation;
 
@@ -70,12 +71,12 @@ public class ServerGameActivity extends GameActivity {
 		GameData gameData = simulation.getServerData();
 		setData(gameData);
 		simulation.setServerPosition(getPosition());
-		if(gameData.getStatus() == GameData.STATUS_WON) {
+		if(gameData.getStatus() == GameStatus.WON) {
 			controlledDisconnection = true;
 			showInfoMessage("You won!", "Congratulation!");
 			startActivity(new WaitingActivity(myNick));
 		}
-		else if(gameData.getStatus() == GameData.STATUS_LOST) {
+		else if(gameData.getStatus() == GameStatus.LOST) {
 			controlledDisconnection = true;
 			showInfoMessage("You lost!", "Maybe next time");
 			startActivity(new WaitingActivity(myNick));

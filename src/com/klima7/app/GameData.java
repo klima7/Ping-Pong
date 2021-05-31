@@ -13,9 +13,9 @@ public class GameData {
 	private final Point ballPosition;
 	private final int myScore;
 	private final int opponentScore;
-	private final int status;
+	private final GameStatus status;
 
-	public GameData(int playerPosition, Point ballPosition, int myScore, int opponentScore, int status) {
+	public GameData(int playerPosition, Point ballPosition, int myScore, int opponentScore, GameStatus status) {
 		this.playerPosition = playerPosition;
 		this.ballPosition = ballPosition;
 		this.myScore = myScore;
@@ -39,7 +39,7 @@ public class GameData {
 		return opponentScore;
 	}
 
-	public int getStatus() {
+	public GameStatus getStatus() {
 		return status;
 	}
 
@@ -50,7 +50,7 @@ public class GameData {
 		dos.writeInt(ballPosition.y);
 		dos.writeInt(myScore);
 		dos.writeInt(opponentScore);
-		dos.writeInt(status);
+		dos.writeInt(status.getValue());
 		dos.flush();
 	}
 
@@ -62,6 +62,6 @@ public class GameData {
 		int myScore = dis.readInt();
 		int opponentScore = dis.readInt();
 		int status = dis.readInt();
-		return new GameData(playerPosition, new Point(ballX, ballY), myScore, opponentScore, status);
+		return new GameData(playerPosition, new Point(ballX, ballY), myScore, opponentScore, GameStatus.valueOf(status));
 	}
 }

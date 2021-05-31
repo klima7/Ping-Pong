@@ -1,6 +1,7 @@
 package com.klima7.simulation;
 
 import com.klima7.app.GameData;
+import com.klima7.app.GameStatus;
 
 import java.awt.*;
 import java.util.Timer;
@@ -44,7 +45,7 @@ public class Simulation {
 
 	private synchronized void update(long millis) {
 
-		if(getStatus(serverPoints, clientPoints) != GameData.STATUS_PENDING)
+		if(getStatus(serverPoints, clientPoints) != GameStatus.PENDING)
 			return;
 
 		ball.update(millis);
@@ -88,21 +89,21 @@ public class Simulation {
 		return server;
 	}
 
-	private static int getStatus(int myPoints, int opponentPoints) {
-		if(myPoints >= WON_SCORE) return GameData.STATUS_WON;
-		else if(opponentPoints >= WON_SCORE) return GameData.STATUS_LOST;
-		else return GameData.STATUS_PENDING;
+	private static GameStatus getStatus(int myPoints, int opponentPoints) {
+		if(myPoints >= WON_SCORE) return GameStatus.WON;
+		else if(opponentPoints >= WON_SCORE) return GameStatus.LOST;
+		else return GameStatus.PENDING;
 	}
 
 	public synchronized GameData getClientData() {
 		Point ballPosition = new Point((int)(MAP_WIDTH-ball.getX()-ball.getWidth()), (int)ball.getY());
-		int status = getStatus(clientPoints, serverPoints);
+		GameStatus status = getStatus(clientPoints, serverPoints);
 		return new GameData(server.getPosition(), ballPosition, clientPoints, serverPoints, status);
 	}
 
 	public synchronized GameData getServerData() {
 		Point ballPosition = new Point((int)ball.getX(), (int)ball.getY());
-		int status = getStatus(serverPoints, clientPoints);
+		GameStatus status = getStatus(serverPoints, clientPoints);
 		return new GameData(client.getPosition(), ballPosition, serverPoints, clientPoints, status);
 	}
 

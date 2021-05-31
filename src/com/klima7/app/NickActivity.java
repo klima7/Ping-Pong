@@ -4,8 +4,6 @@ import javax.swing.*;
 
 public class NickActivity extends Activity {
 
-	public static final int MIN_NICK_LENGTH = 5;
-
 	private JTextField nickField;
 
 	@Override
@@ -31,10 +29,10 @@ public class NickActivity extends Activity {
 
 	private void okClicked() {
 		String nick = nickField.getText();
-//		if(nick.length() < MIN_NICK_LENGTH) {
-//			showInfoMessage("Nick too short", "You nick must have at least " + MIN_NICK_LENGTH + " characters");
-//			return;
-//		}
+		if(nick.length() == 0) {
+			showInfoMessage("Invalid nick", "You nick must have at least one character");
+			return;
+		}
 		startActivity(new ModuleActivity(nick));
 	}
 }

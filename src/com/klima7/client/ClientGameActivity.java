@@ -2,6 +2,7 @@ package com.klima7.client;
 
 import com.klima7.app.GameData;
 import com.klima7.app.GameActivity;
+import com.klima7.app.GameStatus;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,12 +27,12 @@ public class ClientGameActivity extends GameActivity {
 		try {
 			GameData data = GameData.getFromStream(dis);
 			setData(data);
-			if(data.getStatus() == GameData.STATUS_WON) {
+			if(data.getStatus() == GameStatus.WON) {
 				controlledDisconnection = true;
 				showInfoMessage("You won!", "Congratulation!");
 				startActivity(new ServerSelectionActivity(myNick));
 			}
-			else if(data.getStatus() == GameData.STATUS_LOST) {
+			else if(data.getStatus() == GameStatus.LOST) {
 				controlledDisconnection = true;
 				showInfoMessage("You lost!", "Maybe next time");
 				startActivity(new ServerSelectionActivity(myNick));
