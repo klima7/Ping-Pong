@@ -4,18 +4,21 @@ import com.klima7.app.Activity;
 import com.klima7.app.NickActivity;
 
 import javax.swing.*;
+import java.net.Socket;
 
 public class WaitingActivity extends Activity implements WaitingAssistant.PositionNotifierListener {
 
-	private String nick;
-	private Offer offer;
+	private String myNick;
+	private String serverNick;
+	private Socket socket;
 	private WaitingAssistant assistant;
 
 	private JLabel text;
 
-	public WaitingActivity(String nick, Offer offer) {
-		this.nick = nick;
-		this.offer = offer;
+	public WaitingActivity(String myNick, String serverNick, Socket socket) {
+		this.myNick = myNick;
+		this.serverNick = serverNick;
+		this.socket = socket;
 	}
 
 	@Override
@@ -39,7 +42,7 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 	@Override
 	public void onStart() {
 		super.onStart();
-		assistant = new WaitingAssistant(offer.getSocket(), nick, this);
+		assistant = new WaitingAssistant(socket, myNick, this);
 		assistant.start();
 	}
 
@@ -50,7 +53,7 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 	}
 
 	private void cancelClicked() {
-		startActivity(new ServerSelectionActivity(nick));
+		startActivity(new ServerSelectionActivity(myNick));
 	}
 
 	@Override
@@ -66,14 +69,14 @@ public class WaitingActivity extends Activity implements WaitingAssistant.Positi
 
 	@Override
 	public void onValidNick() {
-		startActivity(new ClientGameActivity(nick, offer));
+		startActivity(new ClientGameActivity(myNick, serverNick, socket));
 	}
 
 	@Override
 	public void onError() {
 		showErrorMessage("Connection error", "Connection with server lost");
 		assistant.quit();
-		startActivity(new ServerSelectionActivity(nick));
+		startActivity(new ServerSelectionActivity(myNick));
 	}
 
 	private void setPosition(int position) {

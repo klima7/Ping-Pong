@@ -6,6 +6,7 @@ import com.klima7.app.ModuleActivity;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.List;
 
 public class ServerSelectionActivity extends Activity {
@@ -121,13 +122,11 @@ public class ServerSelectionActivity extends Activity {
 
 	private void connectWithServer(Offer offer) {
 		try {
-			offer.connect();
+			Socket socket = new Socket(offer.getAddress(), offer.getPort());
+			startActivity(new WaitingActivity(nick, offer.getNick(), socket));
 		} catch (IOException e) {
 			showErrorMessage("Connection error", "Unable to connect to server");
-			return;
 		}
-
-		startActivity(new WaitingActivity(nick, offer));
 	}
 
 	private boolean showQueryDialog(Offer offer) {

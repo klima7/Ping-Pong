@@ -7,13 +7,14 @@ import com.klima7.app.GameStatus;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 
 public class ClientGameActivity extends GameActivity {
 
 	private boolean expectedDisconnect = false;
 
-	public ClientGameActivity(String myNick, Offer offer) {
-		super(myNick, offer.getNick(), offer.getSocket());
+	public ClientGameActivity(String myNick, String nick, Socket socket) {
+		super(myNick, nick, socket);
 	}
 
 	@Override
