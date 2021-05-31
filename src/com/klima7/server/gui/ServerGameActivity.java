@@ -36,7 +36,6 @@ public class ServerGameActivity extends GameActivity {
 	@Override
 	public void backClicked() {
 		controlledDisconnection = true;
-		super.backClicked();
 		try {
 			Server.getInstance().stop();
 		} catch (IOException e) {
@@ -71,7 +70,18 @@ public class ServerGameActivity extends GameActivity {
 	@Override
 	public void updateData() {
 		if(simulation == null) return;
-		setData(simulation.getServerData());
+		GameData gameData = simulation.getServerData();
+		setData(gameData);
 		simulation.setServerPosition(getPosition());
+		if(gameData.getStatus() == GameData.STATUS_WON) {
+			controlledDisconnection = true;
+			showInfoMessage("You won!", "Congratulation!");
+			startActivity(new WaitingActivity(myNick));
+		}
+		else if(gameData.getStatus() == GameData.STATUS_LOST) {
+			controlledDisconnection = true;
+			showInfoMessage("You lost!", "Maybe next time");
+			startActivity(new WaitingActivity(myNick));
+		}
 	}
 }

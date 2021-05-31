@@ -5,16 +5,22 @@ import java.io.*;
 
 public class GameData {
 
+	public static final int STATUS_PENDING = 0;
+	public static final int STATUS_WON = 1;
+	public static final int STATUS_LOST = 2;
+
 	private final int playerPosition;
 	private final Point ballPosition;
 	private final int myScore;
 	private final int opponentScore;
+	private final int status;
 
-	public GameData(int playerPosition, Point ballPosition, int myScore, int opponentScore) {
+	public GameData(int playerPosition, Point ballPosition, int myScore, int opponentScore, int status) {
 		this.playerPosition = playerPosition;
 		this.ballPosition = ballPosition;
 		this.myScore = myScore;
 		this.opponentScore = opponentScore;
+		this.status = status;
 	}
 
 	public int getPlayerPosition() {
@@ -33,6 +39,10 @@ public class GameData {
 		return opponentScore;
 	}
 
+	public int getStatus() {
+		return status;
+	}
+
 	public void sendToStream(OutputStream os) throws IOException {
 		DataOutputStream dos = new DataOutputStream(os);
 		dos.writeInt(playerPosition);
@@ -40,6 +50,7 @@ public class GameData {
 		dos.writeInt(ballPosition.y);
 		dos.writeInt(myScore);
 		dos.writeInt(opponentScore);
+		dos.writeInt(status);
 		dos.flush();
 	}
 
@@ -50,6 +61,7 @@ public class GameData {
 		int ballY = dis.readInt();
 		int myScore = dis.readInt();
 		int opponentScore = dis.readInt();
-		return new GameData(playerPosition, new Point(ballX, ballY), myScore, opponentScore);
+		int status = dis.readInt();
+		return new GameData(playerPosition, new Point(ballX, ballY), myScore, opponentScore, status);
 	}
 }

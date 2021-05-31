@@ -1,6 +1,8 @@
 package com.klima7.app.gui;
 
+import com.klima7.app.back.Constants;
 import com.klima7.app.back.GameData;
+import com.klima7.server.back.TcpManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,7 @@ public abstract class GameActivity extends Activity {
 	private final String opponentNick;
 
 	private double myVelocity = 0;
-	private double myPosition = 100;
+	private double myPosition = (MAP_HEIGHT - PLAYER_HEIGHT) / 2;
 
 	private GameData data;
 	private Socket socket;
@@ -55,9 +57,9 @@ public abstract class GameActivity extends Activity {
 		loopTask = new TimerTask() {
 			@Override
 			public void run() {
-				updateData();
 				updateGame(10);
 				triggerSendData();
+				updateData();
 				repaint();
 			}
 		};
@@ -101,13 +103,13 @@ public abstract class GameActivity extends Activity {
 		listener.interrupt();
 		loopTask.cancel();
 		timer.purge();
-	}
 
-	public void backClicked() {
 		try {
 			socket.close();
 		} catch (IOException ignored) { }
 	}
+
+	public void backClicked() { }
 
 	protected void updateGame(int elapsedMillis) {
 		myPosition += this.myVelocity * elapsedMillis / 1000;
@@ -200,6 +202,7 @@ public abstract class GameActivity extends Activity {
 
 	public void setData(GameData data) {
 		this.data = data;
+		repaint();
 	}
 
 	public void updateData() {};

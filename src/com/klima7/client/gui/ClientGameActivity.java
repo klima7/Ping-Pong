@@ -20,7 +20,6 @@ public class ClientGameActivity extends GameActivity {
 	@Override
 	public void backClicked() {
 		controlledDisconnection = true;
-		super.backClicked();
 		startActivity(new ServerSelectionActivity(myNick));
 	}
 
@@ -29,6 +28,16 @@ public class ClientGameActivity extends GameActivity {
 		try {
 			GameData data = GameData.getFromStream(dis);
 			setData(data);
+			if(data.getStatus() == GameData.STATUS_WON) {
+				controlledDisconnection = true;
+				showInfoMessage("You won!", "Congratulation!");
+				startActivity(new ServerSelectionActivity(myNick));
+			}
+			else if(data.getStatus() == GameData.STATUS_LOST) {
+				controlledDisconnection = true;
+				showInfoMessage("You lost!", "Maybe next time");
+				startActivity(new ServerSelectionActivity(myNick));
+			}
 		} catch (IOException e) {
 			if(controlledDisconnection)
 				return;
