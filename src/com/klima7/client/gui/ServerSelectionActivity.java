@@ -2,21 +2,18 @@ package com.klima7.client.gui;
 
 import com.klima7.app.gui.Activity;
 import com.klima7.app.gui.ModuleActivity;
-import com.klima7.client.back.UdpDiscoverer;
 import com.klima7.client.back.Offer;
+import com.klima7.client.back.UdpDiscoverer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSelectionActivity extends Activity {
 
 	private String nick;
-
 	private JList<Offer> list;
-	private final List<Offer> entries = new ArrayList<>();
 
 	public ServerSelectionActivity(String nick) {
 		this.nick = nick;
@@ -66,16 +63,8 @@ public class ServerSelectionActivity extends Activity {
 
 	private void updateList(List<Offer> offers) {
 		System.out.println("Updating list with " + offers.size());
-		entries.clear();
-		for(Offer offer : offers) {
-			addOffer(offer);
-		}
-	}
-
-	private void addOffer(Offer offer) {
-		entries.add(offer);
-		Offer[] array = new Offer[entries.size()];
-		entries.toArray(array);
+		Offer[] array = new Offer[offers.size()];
+		offers.toArray(array);
 		list.setListData(array);
 	}
 
