@@ -71,7 +71,6 @@ public class ServerSelectionActivity extends Activity {
 	}
 
 	private void updateList(List<Offer> offers) {
-		System.out.println("Updating list with " + offers.size());
 		Offer[] array = new Offer[offers.size()];
 		offers.toArray(array);
 		list.setListData(array);
@@ -94,12 +93,10 @@ public class ServerSelectionActivity extends Activity {
 	}
 
 	private void backClicked() {
-		System.out.println("Back clicked");
 		startActivity(new ModuleActivity(nick));
 	}
 
 	private void refreshClicked() {
-		System.out.println("refresh clicked");
 		UdpDiscoverer.discoverAsync().thenAccept(this::updateList);
 	}
 

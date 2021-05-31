@@ -24,11 +24,13 @@ public abstract class GameActivity extends Activity {
 	public static final int MAP_X = 50;
 	public static final int MAP_Y = 60;
 
+	public static final int REFRESH_PERIOD = 10;
+
 	protected final String myNick;
 	private final String opponentNick;
 
 	private double myVelocity = 0;
-	private double myPosition = (MAP_HEIGHT - PLAYER_HEIGHT) / 2;
+	private double myPosition = (double)(MAP_HEIGHT - PLAYER_HEIGHT) / 2;
 
 	private GameData data;
 	private Socket socket;
@@ -41,7 +43,10 @@ public abstract class GameActivity extends Activity {
 		this.myNick = myNick;
 		this.opponentNick = opponentNick;
 		this.socket = socket;
+	}
 
+	@Override
+	public void initUI() {
 		setLayout(null);
 
 		JButton backButton = new JButton("Back");
@@ -49,24 +54,27 @@ public abstract class GameActivity extends Activity {
 		backButton.setBounds(10, 20, 100, 30);
 		backButton.addActionListener(e -> backClicked());
 		add(backButton);
-
-		timer = new Timer();
-		loopTask = new TimerTask() {
-			@Override
-			public void run() {
-				updateGame(10);
-				triggerSendData();
-				updateData();
-				repaint();
-			}
-		};
-
-		timer.scheduleAtFixedRate(loopTask, 0, 10);
 	}
 
 	@Override
 	public void onStart() {
-		super.onStart();
+		startTimer();
+		startKeyboardListening();
+		startSocketListening();
+	}
+
+	private void startTimer() {
+		timer = new Timer();
+		loopTask = new TimerTask() {
+			@Override
+			public void run() {
+				loop();
+			}
+		};
+		timer.scheduleAtFixedRate(loopTask, 0, REFRESH_PERIOD);
+	}
+
+	private void startKeyboardListening() {
 		getContext().requestFocus();
 
 		getContext().addKeyListener(new KeyAdapter() {
@@ -85,13 +93,22 @@ public abstract class GameActivity extends Activity {
 				myVelocity = 0;
 			}
 		});
+	}
 
+	private void startSocketListening() {
 		try {
 			listener = new GameListener(socket.getInputStream());
 			listener.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void loop() {
+		updateGame(REFRESH_PERIOD);
+		triggerSendData();
+		updateData();
+		repaint();
 	}
 
 	@Override
@@ -105,8 +122,6 @@ public abstract class GameActivity extends Activity {
 			socket.close();
 		} catch (IOException ignored) { }
 	}
-
-	public void backClicked() { }
 
 	protected void updateGame(int elapsedMillis) {
 		myPosition += this.myVelocity * elapsedMillis / 1000;
@@ -208,6 +223,8 @@ public abstract class GameActivity extends Activity {
 
 	public abstract void sendData(DataOutputStream dos);
 
+	public abstract void backClicked();
+
 
 	private class GameListener extends Thread {
 
@@ -219,11 +236,10 @@ public abstract class GameActivity extends Activity {
 
 		@Override
 		public void run() {
-			LOGGER.info("Starting GameListener");
-			while(!Thread.interrupted()) {
+			LOGGER.info("Starting Listener");
+			while(!Thread.interrupted())
 				receiveData(dis);
-			}
-			LOGGER.info("Exiting GameListener");
+			LOGGER.info("Exiting Listener");
 		}
 	}
 }

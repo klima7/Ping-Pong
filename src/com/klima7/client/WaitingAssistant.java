@@ -45,12 +45,9 @@ public class WaitingAssistant extends Thread {
 		DataInputStream input = new DataInputStream(socket.getInputStream());
 		socket.setSoTimeout(100);
 
-		System.out.println("Receiving message");
-
 		while(true) {
 			try {
 				String message = input.readUTF();
-				System.out.println("Message received");
 				return message;
 			} catch (SocketTimeoutException e) {
 				if(isInterrupted()) {

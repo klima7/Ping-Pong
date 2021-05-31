@@ -7,9 +7,10 @@ public class Constants {
 
 	public static final int MAP_WIDTH = 600;
 	public static final int MAP_HEIGHT = 360;
+
 	public static final int PLAYER_HEIGHT = 40;
 	public static final int PLAYER_WIDTH = 10;
 	public static final double PLAYER_SPEED = 200;
-	public static final int BALL_SIZE = 10;
 
+	public static final int BALL_SIZE = 10;
 }

@@ -47,13 +47,11 @@ public class Ball extends Sprite {
 	}
 
 	public void setVx(double xVelocity) {
-		System.out.println("xVelocity");
 		vx = xVelocity;
 		vy = Math.sqrt(SPEED*SPEED - xVelocity*xVelocity) * Math.signum(vy);
 	}
 
 	public void setVy(double yVelocity) {
-		System.out.println("yVelocity");
 		vy = yVelocity;
 		vx = Math.sqrt(SPEED*SPEED - yVelocity*yVelocity) * Math.signum(vx);
 	}

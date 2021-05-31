@@ -1,14 +1,8 @@
 package com.klima7.app;
 
-import com.klima7.server.TcpManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 
 public class Activity extends JPanel {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(TcpManager.class);
 
 	private App context;
 
@@ -26,13 +20,9 @@ public class Activity extends JPanel {
 
 	public void initUI() {};
 
-	public void onStart() {
-		LOGGER.info("Starting activity " + getClass().getSimpleName());
-	};
+	public void onStart() {};
 
-	public void onStop() {
-		LOGGER.info("Stopping activity " + getClass().getSimpleName());
-	};
+	public void onStop() {};
 
 	public void startActivity(Activity activity) {
 		context.setActivity(activity);
