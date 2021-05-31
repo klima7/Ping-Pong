@@ -13,7 +13,7 @@ import static com.klima7.app.Constants.*;
 public class Simulation {
 
 	public static final int FPS = 30;
-	public static final int WON_SCORE = 1;
+	public static final int WON_SCORE = 2;
 
 	private final Ball ball;
 	private final Player client;

@@ -86,7 +86,6 @@ public class UdpManager extends Thread {
 	}
 
 	private void closeSocketAndLeaveGroup() {
-		LOGGER.info("Closing socket and leaving group");
 		try {
 			InetSocketAddress groupAddress = new InetSocketAddress(InetAddress.getByName(Constants.DISCOVERY_GROUP), 0);
 			socket.leaveGroup(groupAddress, NetworkInterface.getByName("wlan0"));
