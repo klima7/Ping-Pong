@@ -27,4 +27,13 @@ Server sends periodically binary messages with undermentioned fields.
 ### Gameplay client protocol
 Client sends periodically his Y coordinate in binary messages.
 
+## Galery
 
+### Initial screens
+<img src="https://github.com/klima7/Ping-Pong/blob/images/images/nick_mode.png" width="700" />
+
+### Server waiting and discovery screens
+<img src="https://github.com/klima7/Ping-Pong/blob/images/images/waiting_server.png" width="700" />
+
+### Game screens
+<img src="https://github.com/klima7/Ping-Pong/blob/images/images/game.png" width="700" />
